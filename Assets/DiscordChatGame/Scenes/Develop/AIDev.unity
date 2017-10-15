@@ -220,7 +220,7 @@ GameObject:
   - component: {fileID: 147082936}
   - component: {fileID: 147082935}
   - component: {fileID: 147082938}
-  - component: {fileID: 147082939}
+  - component: {fileID: 147082940}
   m_Layer: 0
   m_Name: EnemyPlaceholder
   m_TagString: Untagged
@@ -320,7 +320,7 @@ CircleCollider2D:
   m_Offset: {x: -0.0009352327, y: 0}
   serializedVersion: 2
   m_Radius: 0.08410104
---- !u!114 &147082939
+--- !u!114 &147082940
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 0}
@@ -328,17 +328,16 @@ MonoBehaviour:
   m_GameObject: {fileID: 147082934}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: cc1c82c7ed8f48946942485d5b25ea79, type: 3}
+  m_Script: {fileID: 11500000, guid: ef11d8523045dcb44953378035d0ca9a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  enemyMask:
-    serializedVersion: 2
-    m_Bits: 0
+  currentState: {fileID: 11400000, guid: 9c0550818b234dd4cbee451bcfe38cb4, type: 2}
+  remainState: {fileID: 11400000, guid: 73d7596db81c9ef459ddc564639832f0, type: 2}
+  stateTimeElapsed: 0
   speed: 1
   rb: {fileID: 0}
   width: 0
-  lineCastPosition: {x: 0, y: 0}
-  distanceFromWall: 4.08
+  distanceFromWall: 4.07
 --- !u!1 &939679002
 GameObject:
   m_ObjectHideFlags: 0
