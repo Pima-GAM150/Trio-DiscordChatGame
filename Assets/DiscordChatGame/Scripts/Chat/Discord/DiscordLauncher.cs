@@ -44,13 +44,6 @@ public class DiscordLauncher : MonoBehaviour
         DontDestroyOnLoad(this);
     }
 
-    public void StartDiscordBot(string token)
-    {
-        // Start async context
-        Debug.Log($"{LogHelpers.FormatTimestamp()} Starting Async Task to launch Discord Bot");
-        StartBotAsync(token).GetAwaiter().GetResult();
-    }
-
     public async Task StartBotAsync(string token)
     {
         // Disable SSL Certificate Validation.
@@ -62,18 +55,15 @@ public class DiscordLauncher : MonoBehaviour
         {
             LogLevel = LogSeverity.Verbose
         };
-
         // create our client
         Client = new DiscordSocketClient(socketConfig);
-        Debug.Log($"{LogHelpers.FormatTimestamp()} Created Client");
-        Client.Log += ConvertDiscordLog;
-
-        Debug.Log($"{LogHelpers.FormatTimestamp()} Awaiting Login");
+        Debug.Log($"{LogHelpers.FormatTimestamp()} Created Discord Client");
+        Debug.Log($"{LogHelpers.FormatTimestamp()} Awaiting Discord Login");
         await Client.LoginAsync(TokenType.Bot, token);
         await Client.StartAsync();
-
-        Debug.Log($"{LogHelpers.FormatTimestamp()} Keeping Task Alive");
+        Client.Log += ConvertDiscordLog;
         // keep task alive until this is closed.
+        Debug.Log($"{LogHelpers.FormatTimestamp()} Keeping Discord Task Alive");
         await Task.Delay(-1);
     }
 
