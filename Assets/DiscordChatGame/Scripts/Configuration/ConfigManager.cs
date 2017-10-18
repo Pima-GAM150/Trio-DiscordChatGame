@@ -117,7 +117,7 @@ public class ConfigManager : MonoBehaviour
         }
         else
         {
-            Debug.LogWarning($"{LogHelpers.FormatTimestamp()} Destroying {this} on {name}. Multiple {this} found.");
+            Debug.LogWarning($"{Log.Timestamp()} Destroying {this} on {name}. Multiple {this} found.");
             Destroy(this);
         }
     }
