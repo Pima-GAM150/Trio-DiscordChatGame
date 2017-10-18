@@ -755,8 +755,9 @@ GameObject:
   m_Component:
   - component: {fileID: 1684394371}
   - component: {fileID: 1684394370}
+  - component: {fileID: 1684394372}
   m_Layer: 0
-  m_Name: ChatSingleton
+  m_Name: Singleton
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -786,6 +787,17 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1684394372
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1684394369}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 74337a55e9fd3b341957aa24ab9012df, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1692647193
 GameObject:
   m_ObjectHideFlags: 0
@@ -1022,6 +1034,9 @@ MonoBehaviour:
   InfoText: {fileID: 781850380}
   MainPage: {fileID: 1692647193}
   PushNotificationTime: 5000
+  PushColorInfo: {r: 1, g: 1, b: 1, a: 1}
+  PushColorError: {r: 1, g: 0, b: 0, a: 1}
+  PushColorWarning: {r: 1, g: 0.92156863, b: 0.015686275, a: 1}
 --- !u!114 &1952167915
 MonoBehaviour:
   m_ObjectHideFlags: 0

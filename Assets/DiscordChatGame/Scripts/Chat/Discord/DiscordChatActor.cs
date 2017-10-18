@@ -1,4 +1,6 @@
-﻿using DSharpPlus;
+﻿#pragma warning disable RECS0165 // Asynchronous methods should return a Task instead of void
+
+using DSharpPlus;
 using DSharpPlus.Net.WebSocket;
 using System.Collections;
 using System.Collections.Generic;
@@ -10,21 +12,16 @@ using System.Net;
 
 public class DiscordChatActor : MonoBehaviour
 {
+    public delegate void LogMessage(string message, LogLevel level);
+
+    public event LogMessage OnLogMessage;
+
     public static DiscordChatActor Instance { get; private set; }
     public DiscordClient Client { get; private set; }
 
     public async Task Run(string token)
     {
-        // Disable SSL Certificate Validation
-        // see: https://dsharpplus.emzi0767.com/articles/hosting_rpi.html#method-4-run-your-bot-using-mono
-        ServicePointManager.ServerCertificateValidationCallback = (s, cert, chain, ssl) => true;
-        Client = new DiscordClient(GenerateConfig(token));
-        Client.SetWebSocketClient<WebSocketSharpClient>();
-
-        Client.Ready += Client_Ready;
-        Client.DebugLogger.LogMessageReceived += DebugLogger_LogMessageReceived;
-        Client.ClientErrored += Client_ClientErrored;
-
+        CreateClient(token);
         await Client.ConnectAsync();
     }
 
@@ -33,9 +30,28 @@ public class DiscordChatActor : MonoBehaviour
         await Client.DisconnectAsync();
     }
 
+    private void CreateClient(string token)
+    {
+        // Disable SSL Certificate Validation
+        // see: https://dsharpplus.emzi0767.com/articles/hosting_rpi.html#method-4-run-your-bot-using-mono
+        ServicePointManager.ServerCertificateValidationCallback = (s, cert, chain, ssl) => true;
+
+        // Setup Client only if this is the first time.
+        if (Client == null)
+        {
+            Client = new DiscordClient(GenerateConfig(token));
+            Client.SetWebSocketClient<WebSocketSharpClient>();
+
+            Client.Ready += Client_Ready;
+            Client.DebugLogger.LogMessageReceived += DebugLogger_LogMessageReceived;
+            Client.ClientErrored += Client_ClientErrored;
+        }
+    }
+
     private Task Client_ClientErrored(ClientErrorEventArgs e)
     {
         Debug.LogError($"{Log.Timestamp()} Discord-ClientErrored: {e.Exception}");
+        OnLogMessage?.Invoke("Error while connecting!", LogLevel.Error);
         return Task.CompletedTask;
     }
 
@@ -51,6 +67,7 @@ public class DiscordChatActor : MonoBehaviour
     }
 
     private async void OnDestroy()
+
     {
         if (Instance = this)
             Instance = null;
@@ -69,25 +86,30 @@ public class DiscordChatActor : MonoBehaviour
 
             case LogLevel.Info:
                 Debug.Log(msg);
+                OnLogMessage?.Invoke(e.Message, e.Level);
                 break;
 
             case LogLevel.Warning:
                 Debug.LogWarning(msg);
+                OnLogMessage?.Invoke(e.Message, e.Level);
                 break;
 
             case LogLevel.Error:
                 Debug.LogError(msg);
+                OnLogMessage?.Invoke(e.Message, e.Level);
                 break;
 
             case LogLevel.Critical:
                 Debug.LogAssertion(msg);
+                OnLogMessage?.Invoke(e.Message, e.Level);
                 break;
         }
     }
 
     private Task Client_Ready(DSharpPlus.EventArgs.ReadyEventArgs e)
     {
-        Debug.Log($"{Log.Timestamp()} Client is Ready!");
+        Debug.Log($"{Log.Timestamp()} Discord Client is Ready! Username: {e.Client.CurrentUser.Username}");
+        OnLogMessage?.Invoke($"Client Connected Successfully as {e.Client.CurrentUser.Username}", LogLevel.Info);
         return Task.CompletedTask;
     }
 
