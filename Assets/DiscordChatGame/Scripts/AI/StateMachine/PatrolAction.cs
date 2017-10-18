@@ -11,6 +11,9 @@ public class PatrolAction : Action {
     private float jumpTimer = 0f;
     private float jump = 0.5f;
 
+    private float stuckTimer = 0f;
+    private float stuck = 2f;
+
     public override void Act(StateController controller)
     {
         Patrol(controller);
@@ -27,20 +30,21 @@ public class PatrolAction : Action {
             lineCastPosition = controller.transform.position + controller.transform.right * controller.width;
             //lineCastPosition = controller.transform.position;
             hit = Physics2D.Raycast(lineCastPosition, Vector2.right);
-            Debug.DrawRay(lineCastPosition, Vector2.right, Color.red);
+            //Debug.DrawRay(lineCastPosition, Vector2.right, Color.red);
         }
         else
         {
             lineCastPosition = controller.transform.position + controller.transform.right * controller.width;
             //lineCastPosition = controller.transform.position;
             hit = Physics2D.Raycast(lineCastPosition, -Vector2.right);
-            Debug.DrawRay(lineCastPosition, -Vector2.right, Color.red);
+            //Debug.DrawRay(lineCastPosition, -Vector2.right, Color.red);
         }
         
         //checks if enemy is grounded
         grounded = isGrounded(lineCastPosition);
         //Debug.Log(grounded);
-        Debug.Log(hit.collider.name + ", " + Mathf.Abs(Vector2.Distance(controller.transform.position, hit.collider.transform.position)));
+        //Debug.Log(controller.rb.velocity.magnitude);
+        //Debug.Log(hit.collider.name + ", " + Mathf.Abs(Vector2.Distance(controller.transform.position, hit.collider.transform.position)));
         float distanceFromHit = Mathf.Abs(Vector2.Distance(controller.transform.position, hit.collider.transform.position));
         if (hit.collider.tag == "Obstacle"
             && grounded
@@ -62,17 +66,20 @@ public class PatrolAction : Action {
         else if (hit.collider.name.Contains("RightWall")
             && distanceFromHit < controller.distanceFromWall)
         {
-            controller.transform.localRotation = Quaternion.Euler(0, 180, 0);
+            //controller.transform.localRotation = Quaternion.Euler(0, 180, 0);
             controller.faceRight = false;
+            controller.Flip(controller.faceRight);
         }
         else if (hit.collider.name.Contains("LeftWall")
           && distanceFromHit < controller.distanceFromWall)
         {
-            controller.transform.localRotation = Quaternion.Euler(0, 0, 0);
+            //controller.transform.localRotation = Quaternion.Euler(0, 0, 0);
             controller.faceRight = true;
+            controller.Flip(controller.faceRight);
         }
 
         Move(controller);
+        Stuck(controller);
     }
 
     private void Move(StateController controller)
@@ -112,6 +119,23 @@ public class PatrolAction : Action {
         else
         {
             return false;
+        }
+    }
+
+    private void Stuck(StateController controller)
+    {
+        //Debug.Log("Inside Stuck function!");
+        if(controller.rb.velocity.magnitude < 1)
+        {
+            stuckTimer += Time.deltaTime;
+            Debug.Log(stuckTimer);
+            if (stuckTimer > stuck)
+            {
+                Debug.Log("Unstuckify!");
+                controller.faceRight = !controller.faceRight;
+                controller.Flip(controller.faceRight);
+                stuckTimer = 0f;
+            }
         }
     }
 }

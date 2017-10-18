@@ -3,15 +3,14 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-[CreateAssetMenu(menuName = "StateMachine/Decisions/ToPatrol")]
-public class ToPatrol : Decision {
+[CreateAssetMenu(menuName = "StateMachine/Decisions/ToSeek")]
+public class ToSeek : Decision {
 
     public override bool Decide(StateController controller)
     {
         return checkForTarget(controller, "Player");
     }
 
-    //Currently not implemented, will need to check to see if the player is visiable or not
     private bool checkForTarget(StateController controller, String name)
     {
         RaycastHit2D hit;
@@ -35,16 +34,16 @@ public class ToPatrol : Decision {
 
         //foreach (RaycastHit2D hit in hits)
         //{
-            //Debug.Log(hit.collider.name);
-            if (hit.collider.name == name && Vector2.Distance(controller.player.transform.position, controller.transform.position) < 5f)
-            {
-                //Debug.Log("Player Detected!");
-                return true;
-            }
-            else
-            {
-                return false;
-            }
+        //Debug.Log(hit.collider.name);
+        if (hit.collider.name == name && Vector2.Distance(controller.player.transform.position, controller.transform.position) < 5f)
+        {
+            Debug.Log("Player Detected!");
+            return true;
+        }
+        else
+        {
+            return false;
+        }
         //}
         //return false;
 

@@ -7,6 +7,7 @@ public class StateController : MonoBehaviour {
     public State currentState;
     public State remainState;
     public float stateTimeElapsed;
+    public GameObject player;
 
     public float speed = 1f;
     public Rigidbody2D rb;
@@ -20,6 +21,7 @@ public class StateController : MonoBehaviour {
 	void Start () {
         rb = this.GetComponent<Rigidbody2D>();
         width = this.GetComponent<SpriteRenderer>().bounds.extents.x;
+        player = GameObject.Find("Player");
     }
 	
 	// Update is called once per frame
@@ -38,20 +40,33 @@ public class StateController : MonoBehaviour {
         if (nextState != remainState)
         {
             currentState = nextState;
-            //OnExitState();
+            OnExitState();
         }
     }
 
-    /*
-public bool CheckIfCountDownElapsed(float duration)
-{
-    stateTimeElapsed += Time.deltaTime;
-    return (stateTimeElapsed >= duration);
-}
 
-private void OnExitState()
-{
-    stateTimeElapsed = 0;
-}
-*/
+    public void Flip(bool faceRight)
+    {
+        if (faceRight)
+        {
+            transform.localRotation = Quaternion.Euler(0, 0, 0);
+        }
+        else
+        {
+            transform.localRotation = Quaternion.Euler(0, 180, 0);
+        }
+    }
+
+    
+    public bool CheckIfCountDownElapsed(float duration)
+    {
+        stateTimeElapsed += Time.deltaTime;
+        return (stateTimeElapsed >= duration);
+    }
+
+    private void OnExitState()
+    {
+        stateTimeElapsed = 0;
+    }
+    
 }
