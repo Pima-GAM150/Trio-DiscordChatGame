@@ -1,5 +1,4 @@
-﻿#pragma warning disable RECS0165
-#pragma warning disable CS4014
+﻿#pragma warning disable CS4014
 
 using System;
 using System.Collections;
@@ -17,10 +16,7 @@ public class MainMenuControl : MonoBehaviour
     /// </summary>
     public GameObject TokenScreen;
 
-    /// <summary>
-    /// Text object to display push notifications on.
-    /// </summary>
-    public Text InfoText;
+    public PushNotification PushNotificationObj;
 
     /// <summary>
     /// root object for the main menu page.
@@ -58,8 +54,6 @@ public class MainMenuControl : MonoBehaviour
         }
         else
             TokenScreen.SetActive(false);
-
-        InfoText.gameObject.SetActive(false);
     }
 
     public void OnTokenScreenCommit()
@@ -68,8 +62,9 @@ public class MainMenuControl : MonoBehaviour
         var ctx = DiscordChatActor.Instance;
         Debug.Log($"{Log.Timestamp()} Sending Token to DiscordLauncher");
 
-        ctx.Run(_tokenField.text);
+        ctx.CreateClient(_tokenField.text);
         ctx.OnLogMessage += DiscordLogUpdate;
+        ctx.Run();
     }
 
     private void DiscordLogUpdate(string msg, LogLevel level)
@@ -109,16 +104,10 @@ public class MainMenuControl : MonoBehaviour
         MainPage.SetActive(true);
     }
 
-    private async Task PushNotification(string msg, Color color)
+    private void PushNotification(string msg, Color color)
     {
         Debug.Log($"{Log.Timestamp()} [Push Notification]: {msg}");
 
-        InfoText.color = color;
-        InfoText.text = msg;
-        InfoText.gameObject.SetActive(true);
-
-        await Task.Delay(PushNotificationTime);
-        Debug.Log($"{Log.Timestamp()} [Push Notification]: Hid Message.");
-        InfoText.gameObject.SetActive(false);
+        PushNotificationObj.Add(msg, color);
     }
 }

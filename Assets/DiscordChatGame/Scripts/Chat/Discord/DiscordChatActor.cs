@@ -19,9 +19,11 @@ public class DiscordChatActor : MonoBehaviour
     public static DiscordChatActor Instance { get; private set; }
     public DiscordClient Client { get; private set; }
 
-    public async Task Run(string token)
+    public async Task Run()
     {
-        CreateClient(token);
+        if (Client == null)
+            throw new NullReferenceException("Discord client was not created before calling Run. Use CreateClient(token) before!");
+
         await Client.ConnectAsync();
     }
 
@@ -30,7 +32,7 @@ public class DiscordChatActor : MonoBehaviour
         await Client.DisconnectAsync();
     }
 
-    private void CreateClient(string token)
+    public void CreateClient(string token)
     {
         // Disable SSL Certificate Validation
         // see: https://dsharpplus.emzi0767.com/articles/hosting_rpi.html#method-4-run-your-bot-using-mono
