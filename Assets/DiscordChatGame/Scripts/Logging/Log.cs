@@ -6,4 +6,9 @@ public static class Log
     {
         return $"[{System.DateTime.Now:HH:mm:ss:FFF tt}] ";
     }
+
+    public static string ShortTime()
+    {
+        return $"[{System.DateTime.Now:mm:ss:FFF t}]";
+    }
 }

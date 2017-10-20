@@ -1,9 +1,14 @@
-﻿using System;
+﻿#pragma warning disable CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
+
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using DSharpPlus.EventArgs;
 using UnityEngine;
 using UnityEngine.UI;
+using DSharpPlus;
+using TMPro;
 
 public class MainMenuControl : MonoBehaviour
 {
@@ -13,70 +18,70 @@ public class MainMenuControl : MonoBehaviour
     public GameObject TokenScreen;
 
     /// <summary>
-    /// Text object to display push notifications on.
-    /// </summary>
-    public Text InfoText;
-
-    /// <summary>
     /// root object for the main menu page.
     /// </summary>
     public GameObject MainPage;
 
-    /// <summary>
-    /// Time to display a push notification in MS;
-    /// </summary>
-    [Tooltip("Time to display push notifications in MS")]
-    public int PushNotificationTime;
-
-    private InputField _tokenField;
+    private TMP_InputField _tokenField;
+    private Button _tokenButton;
 
     public void Start()
     {
-        _tokenField = TokenScreen.GetComponentInChildren<InputField>();
+        _tokenField = TokenScreen.GetComponentInChildren<TMP_InputField>();
         if (_tokenField == null)
         {
             Debug.LogError($"{Log.Timestamp()} No InputField on TokenScreen!");
         }
-
-        if (string.IsNullOrEmpty(ConfigManager.ActiveManager.DiscordConfig.Token))
+        var discordConfig = ConfigManager.Instance.GetConfig<DiscordConfig>();
+        if (!string.IsNullOrEmpty(discordConfig.Token))
         {
-            MainPage.SetActive(false);
+            _tokenField.text = discordConfig.Token;
         }
-        else
-            TokenScreen.SetActive(false);
-
-        InfoText.gameObject.SetActive(false);
     }
 
-    public async void OnTokenScreenCommit()
+    public void OnTokenScreenCommit(Button b)
     {
+        _tokenButton = b;
+        _tokenButton.interactable = false;
+
         _tokenField.DeactivateInputField();
+
         var ctx = DiscordChatActor.Instance;
         Debug.Log($"{Log.Timestamp()} Sending Token to DiscordLauncher");
-        await ctx.Run(_tokenField.text);
+
+        ctx.CreateClient(_tokenField.text);
+        ctx.Client.Ready += Client_Ready;
+        ctx.FailedLogin += Client_FailedLogin;
+        ctx.Run(_tokenField.text);
     }
 
-    private async Task DiscordLogUpdate()
+    private void Client_FailedLogin(object sender, Exception ex)
     {
+        if (!MainThreadQueue.Instance.IsMain())
+        {
+            MainThreadQueue.Instance.Queue(() => Client_FailedLogin(sender, ex));
+            return;
+        }
+        PushNotification.Instance.Add(ex.Message, PushColor.Failed);
+        _tokenField.ActivateInputField();
+        _tokenButton.interactable = true;
     }
 
-    private async Task Client_Connected()
+    private Task Client_Ready(ReadyEventArgs e)
     {
-        await PushNotification("Discord Client Successfully Connected!");
+        if (!MainThreadQueue.Instance.IsMain())
+        {
+            MainThreadQueue.Instance.Queue(() => Client_Ready(e));
+
+            return Task.CompletedTask;
+        }
+        var config = ConfigManager.Instance.GetConfig<DiscordConfig>();
+        config.Token = _tokenField.text;
+        config.Save();
 
         // switch menu screen.
         TokenScreen.SetActive(false);
         MainPage.SetActive(true);
-    }
-
-    private async Task PushNotification(string msg)
-    {
-        Debug.Log($"[Push Notification]: {msg}");
-        InfoText.text = msg;
-        InfoText.gameObject.SetActive(true);
-
-        await Task.Delay(PushNotificationTime);
-
-        InfoText.gameObject.SetActive(false);
+        return Task.CompletedTask;
     }
 }
