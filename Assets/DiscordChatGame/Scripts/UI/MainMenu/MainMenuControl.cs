@@ -1,4 +1,4 @@
-﻿#pragma warning disable CS4014
+﻿#pragma warning disable CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
 
 using System;
 using System.Collections;
@@ -16,27 +16,10 @@ public class MainMenuControl : MonoBehaviour
     /// </summary>
     public GameObject TokenScreen;
 
-    public PushNotification PushNotificationObj;
-
     /// <summary>
     /// root object for the main menu page.
     /// </summary>
     public GameObject MainPage;
-
-    /// <summary>
-    /// Time to display a push notification in MS;
-    /// </summary>
-    [Tooltip("Time to display push notifications in MS")]
-    public int PushNotificationTime;
-
-    [Tooltip("Color to use on push notifications from Discord-Info")]
-    public Color PushColorInfo = Color.white;
-
-    [Tooltip("Color to use on push notifications from Discord-Error")]
-    public Color PushColorError = Color.red;
-
-    [Tooltip("Color to use on push notifications from Discord-Warning")]
-    public Color PushColorWarning = Color.yellow;
 
     private InputField _tokenField;
 
@@ -56,58 +39,43 @@ public class MainMenuControl : MonoBehaviour
             TokenScreen.SetActive(false);
     }
 
-    public void OnTokenScreenCommit()
+    public void OnTokenScreenCommit(Button b)
     {
+        b.enabled = false;
         _tokenField.DeactivateInputField();
         var ctx = DiscordChatActor.Instance;
         Debug.Log($"{Log.Timestamp()} Sending Token to DiscordLauncher");
 
         ctx.CreateClient(_tokenField.text);
-        ctx.OnLogMessage += DiscordLogUpdate;
+        ctx.Client.Ready += Client_Ready;
+        ctx.Client.ClientErrored += Client_ClientErrored;
         ctx.Run();
     }
 
-    private void DiscordLogUpdate(string msg, LogLevel level)
+    private Task Client_ClientErrored(ClientErrorEventArgs e)
     {
         if (!MainThreadQueue.Instance.IsMain())
         {
-            MainThreadQueue.Instance.Add(() => DiscordLogUpdate(msg, level));
-            return;
+            MainThreadQueue.Instance.Queue(() => Client_ClientErrored(e));
+
+            return Task.CompletedTask;
         }
-        //Debug.Log($"Message Recieved by {this.ToString()}");
-        switch (level)
-        {
-            case LogLevel.Critical:
-                PushNotification(msg, PushColorError);
-                break;
-
-            case LogLevel.Error:
-                PushNotification(msg, PushColorError);
-                break;
-
-            case LogLevel.Warning:
-                PushNotification(msg, PushColorWarning);
-                break;
-
-            case LogLevel.Info:
-                PushNotification(msg, PushColorInfo);
-                break;
-        }
+        _tokenField.ActivateInputField();
+        return Task.CompletedTask;
     }
 
-    private void Client_Connected()
+    private Task Client_Ready(ReadyEventArgs e)
     {
-        PushNotification("Discord Client Successfully Connected!", PushColorInfo);
+        if (!MainThreadQueue.Instance.IsMain())
+        {
+            MainThreadQueue.Instance.Queue(() => Client_Ready(e));
+
+            return Task.CompletedTask;
+        }
 
         // switch menu screen.
         TokenScreen.SetActive(false);
         MainPage.SetActive(true);
-    }
-
-    private void PushNotification(string msg, Color color)
-    {
-        Debug.Log($"{Log.Timestamp()} [Push Notification]: {msg}");
-
-        PushNotificationObj.Add(msg, color);
+        return Task.CompletedTask;
     }
 }

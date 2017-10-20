@@ -12,10 +12,6 @@ using System.Net;
 
 public class DiscordChatActor : MonoBehaviour
 {
-    public delegate void LogMessage(string message, LogLevel level);
-
-    public event LogMessage OnLogMessage;
-
     public static DiscordChatActor Instance { get; private set; }
     public DiscordClient Client { get; private set; }
 
@@ -44,16 +40,35 @@ public class DiscordChatActor : MonoBehaviour
             Client = new DiscordClient(GenerateConfig(token));
             Client.SetWebSocketClient<WebSocketSharpClient>();
 
-            Client.Ready += Client_Ready;
             Client.DebugLogger.LogMessageReceived += DebugLogger_LogMessageReceived;
+            Client.Ready += Client_Ready;
             Client.ClientErrored += Client_ClientErrored;
         }
     }
 
+    private Task Client_Ready(ReadyEventArgs e)
+    {
+        if (!MainThreadQueue.Instance.IsMain())
+        {
+            MainThreadQueue.Instance.Queue(() => Client_Ready(e));
+            return Task.CompletedTask;
+        }
+
+        Debug.Log($"{Log.Timestamp()} Discord-ClientReady: Client is connected.");
+        PushNotification.Instance.Add($"Connected as: {e.Client.CurrentUser.Username}", PushColor.Success);
+        return Task.CompletedTask;
+    }
+
     private Task Client_ClientErrored(ClientErrorEventArgs e)
     {
+        if (!MainThreadQueue.Instance.IsMain())
+        {
+            MainThreadQueue.Instance.Queue(() => Client_ClientErrored(e));
+            return Task.CompletedTask;
+        }
+
         Debug.LogError($"{Log.Timestamp()} Discord-ClientErrored: {e.Exception}");
-        OnLogMessage?.Invoke("Error while connecting!", LogLevel.Error);
+        PushNotification.Instance.Add("Failed to connect to discord. Is your key valid?", PushColor.Failed);
         return Task.CompletedTask;
     }
 
@@ -79,40 +94,41 @@ public class DiscordChatActor : MonoBehaviour
 
     private void DebugLogger_LogMessageReceived(object sender, DebugLogMessageEventArgs e)
     {
+        if (!MainThreadQueue.Instance.IsMain())
+        {
+            MainThreadQueue.Instance.Queue(() => DebugLogger_LogMessageReceived(sender, e));
+            return;
+        }
+
         var msg = $"{Log.Timestamp()} Discord-{e.Level}: {e.Message}";
+        var push = PushNotification.Instance;
         switch (e.Level)
         {
             case LogLevel.Debug:
                 Debug.Log(msg);
+                push.Add(e.Message, PushColor.Debug);
                 break;
 
             case LogLevel.Info:
                 Debug.Log(msg);
-                OnLogMessage?.Invoke(e.Message, e.Level);
+                push.Add(e.Message, PushColor.Info);
                 break;
 
             case LogLevel.Warning:
                 Debug.LogWarning(msg);
-                OnLogMessage?.Invoke(e.Message, e.Level);
+                push.Add(e.Message, PushColor.Warning);
                 break;
 
             case LogLevel.Error:
                 Debug.LogError(msg);
-                OnLogMessage?.Invoke(e.Message, e.Level);
+                push.Add(e.Message, PushColor.Error);
                 break;
 
             case LogLevel.Critical:
                 Debug.LogAssertion(msg);
-                OnLogMessage?.Invoke(e.Message, e.Level);
+                push.Add(e.Message, PushColor.Error);
                 break;
         }
-    }
-
-    private Task Client_Ready(DSharpPlus.EventArgs.ReadyEventArgs e)
-    {
-        Debug.Log($"{Log.Timestamp()} Discord Client is Ready! Username: {e.Client.CurrentUser.Username}");
-        OnLogMessage?.Invoke($"Client Connected Successfully as {e.Client.CurrentUser.Username}", LogLevel.Info);
-        return Task.CompletedTask;
     }
 
     private DiscordConfiguration GenerateConfig(string token)

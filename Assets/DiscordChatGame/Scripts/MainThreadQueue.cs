@@ -26,8 +26,9 @@ public class MainThreadQueue : MonoBehaviour
     {
         return Thread.CurrentThread.ManagedThreadId == _mainThreadID;
     }
+
     // Executes the next action in the queue if any.
-    void Update()
+    private void Update()
     {
         if (_queue.Count > 0)
             lock (_queue)
@@ -39,9 +40,20 @@ public class MainThreadQueue : MonoBehaviour
             }
     }
 
-    public void Add(System.Action del)
+    /// <summary>
+    /// Adds an action to the queue which will be completed next frame.
+    /// </summary>
+    public void Queue(System.Action action)
     {
         lock (_queue)
-            _queue.Enqueue(del);
+            _queue.Enqueue(action);
     }
+
+    // use this snippet at the top of a method to re-call it on the main thread. will be delayed by a single frame.
+    //if (!MainThreadQueue.Instance.IsMain())
+    //{
+    //MainThreadQueue.Instance.Queue(() => privateClient_Ready(e));
+
+    //return Task.CompletedTask;
+    //}
 }
