@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 [Serializable]
-public class DiscordConfig
+public class DiscordConfig : Config
 {
     public string Token = "";
 }

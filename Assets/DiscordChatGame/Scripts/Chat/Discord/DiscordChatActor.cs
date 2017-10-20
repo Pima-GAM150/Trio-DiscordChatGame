@@ -9,23 +9,37 @@ using UnityEngine;
 using System;
 using DSharpPlus.EventArgs;
 using System.Net;
+using DSharpPlus.Exceptions;
 
 public class DiscordChatActor : MonoBehaviour
 {
+    public delegate void ExceptionEventHandler(object sender, Exception ex);
+
     public static DiscordChatActor Instance { get; private set; }
     public DiscordClient Client { get; private set; }
 
-    public async Task Run()
+    public event ExceptionEventHandler FailedLogin;
+
+    public async Task Run(string token)
     {
         if (Client == null)
-            throw new NullReferenceException("Discord client was not created before calling Run. Use CreateClient(token) before!");
-
-        await Client.ConnectAsync();
+            CreateClient(token);
+        try
+        {
+            await Client.ConnectAsync();
+        }
+        catch (Exception e)
+        {
+            Debug.LogError($"{Log.Timestamp()} Discord-Login: {e.Message}");
+            FailedLogin?.Invoke(Client, e);
+            Client = null;
+        }
     }
 
     public async Task Stop()
     {
-        await Client.DisconnectAsync();
+        if (Client != null)
+            await Client.DisconnectAsync();
     }
 
     public void CreateClient(string token)

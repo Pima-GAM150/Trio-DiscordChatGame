@@ -8,6 +8,7 @@ using DSharpPlus.EventArgs;
 using UnityEngine;
 using UnityEngine.UI;
 using DSharpPlus;
+using TMPro;
 
 public class MainMenuControl : MonoBehaviour
 {
@@ -21,47 +22,49 @@ public class MainMenuControl : MonoBehaviour
     /// </summary>
     public GameObject MainPage;
 
-    private InputField _tokenField;
+    private TMP_InputField _tokenField;
+    private Button _tokenButton;
 
     public void Start()
     {
-        _tokenField = TokenScreen.GetComponentInChildren<InputField>();
+        _tokenField = TokenScreen.GetComponentInChildren<TMP_InputField>();
         if (_tokenField == null)
         {
             Debug.LogError($"{Log.Timestamp()} No InputField on TokenScreen!");
         }
-
-        if (string.IsNullOrEmpty(ConfigManager.ActiveManager.DiscordConfig.Token))
+        var discordConfig = ConfigManager.Instance.GetConfig<DiscordConfig>();
+        if (!string.IsNullOrEmpty(discordConfig.Token))
         {
-            MainPage.SetActive(false);
+            _tokenField.text = discordConfig.Token;
         }
-        else
-            TokenScreen.SetActive(false);
     }
 
     public void OnTokenScreenCommit(Button b)
     {
-        b.enabled = false;
+        _tokenButton = b;
+        _tokenButton.interactable = false;
+
         _tokenField.DeactivateInputField();
+
         var ctx = DiscordChatActor.Instance;
         Debug.Log($"{Log.Timestamp()} Sending Token to DiscordLauncher");
 
         ctx.CreateClient(_tokenField.text);
         ctx.Client.Ready += Client_Ready;
-        ctx.Client.ClientErrored += Client_ClientErrored;
-        ctx.Run();
+        ctx.FailedLogin += Client_FailedLogin;
+        ctx.Run(_tokenField.text);
     }
 
-    private Task Client_ClientErrored(ClientErrorEventArgs e)
+    private void Client_FailedLogin(object sender, Exception ex)
     {
         if (!MainThreadQueue.Instance.IsMain())
         {
-            MainThreadQueue.Instance.Queue(() => Client_ClientErrored(e));
-
-            return Task.CompletedTask;
+            MainThreadQueue.Instance.Queue(() => Client_FailedLogin(sender, ex));
+            return;
         }
+        PushNotification.Instance.Add(ex.Message, PushColor.Failed);
         _tokenField.ActivateInputField();
-        return Task.CompletedTask;
+        _tokenButton.interactable = true;
     }
 
     private Task Client_Ready(ReadyEventArgs e)
@@ -72,6 +75,9 @@ public class MainMenuControl : MonoBehaviour
 
             return Task.CompletedTask;
         }
+        var config = ConfigManager.Instance.GetConfig<DiscordConfig>();
+        config.Token = _tokenField.text;
+        config.Save();
 
         // switch menu screen.
         TokenScreen.SetActive(false);

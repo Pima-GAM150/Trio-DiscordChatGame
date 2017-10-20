@@ -56,6 +56,8 @@ public class PushNotification : MonoBehaviour
                 Instance = this;
                 DontDestroyOnLoad(transform.parent);
             }
+            else
+                Destroy(this);
         }
     }
 

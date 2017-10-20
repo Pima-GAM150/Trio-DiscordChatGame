@@ -22,6 +22,9 @@ public class MainThreadQueue : MonoBehaviour
             Destroy(this);
     }
 
+    /// <summary>
+    /// Returns true if called in the main thread.
+    /// </summary>
     public bool IsMain()
     {
         return Thread.CurrentThread.ManagedThreadId == _mainThreadID;

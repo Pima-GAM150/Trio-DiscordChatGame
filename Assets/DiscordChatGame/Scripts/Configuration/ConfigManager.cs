@@ -10,63 +10,69 @@ using UnityEngine;
 public class ConfigManager : MonoBehaviour
 {
     /// <summary>
-    /// Discord Config File.
+    /// collection of Config files.
     /// </summary>
-    public DiscordConfig DiscordConfig
-    {
-        get
-        {
-            if (_discordConfig == null)
-            {
-                return LoadConfigFile<DiscordConfig>("DiscordConfig.json");
-            }
-            return _discordConfig;
-        }
-        private set
-        {
-            _discordConfig = value;
-        }
-    }
+    private Dictionary<Type, Config> _configs = new Dictionary<Type, Config>();
 
-    public static ConfigManager ActiveManager;
+    public static ConfigManager Instance;
 
     private DiscordConfig _discordConfig;
 
     private string _configPath;
 
     /// <summary>
+    /// Gets the active Config loaded for this type or loads a config file and returns it.
+    /// </summary>
+    /// <typeparam name="T"></typeparam>
+    /// <returns></returns>
+    public T GetConfig<T>() where T : Config, new()
+    {
+        if (_configs.ContainsKey(typeof(T)))
+        {
+            return (T)_configs[typeof(T)];
+        }
+        else
+        {
+            return LoadConfigFile<T>();
+        }
+    }
+
+    /// <summary>
     /// Loads a non MonoBehaviour Json Config file.
     /// </summary>
     /// <typeparam name="T">Type of the object to create</typeparam>
-    /// <param name="fileName">file name, i.e: DiscordConfig.json</param>
-    public T LoadConfigFile<T>(string fileName) where T : new()
+    public T LoadConfigFile<T>() where T : Config, new()
     {
-        FileInfo file = new FileInfo(_configPath + fileName);
+        FileInfo file = new FileInfo(_configPath + typeof(T) + ".json");
+        Config cfg;
         if (file.Exists)
         {
             using (StreamReader reader = new StreamReader(file.OpenRead()))
             {
                 var json = reader.ReadToEnd();
-                return JsonUtility.FromJson<T>(json);
+                Debug.Log($"{Log.ShortTime()} Loading Config from {file.FullName}");
+                cfg = JsonUtility.FromJson<T>(json);
             }
         }
         else
         {
-            var obj = new T();
-            SaveConfigFile(fileName, obj);
-            return obj;
+            cfg = new T();
+            Debug.Log($"{Log.ShortTime()} Created Config {file.FullName}");
+            SaveConfigFile(cfg);
         }
+        _configs.Add(typeof(T), cfg);
+
+        return (T)cfg;
     }
 
     /// <summary>
     /// Loads a MonoBehaviour type Config file.
     /// </summary>
     /// <typeparam name="T">Type of the MonoBehaviour to create</typeparam>
-    /// <param name="fileName">file name, i.e: MyMonoBehaviourConfig.json</param>
     /// <param name="obj">the MonoBehaviour object to overwrite.</param>
-    public void LoadMonoConfigFile(string fileName, MonoBehaviour obj)
+    public void LoadMonoConfigFile(MonoBehaviour obj)
     {
-        FileInfo file = new FileInfo(_configPath + fileName);
+        FileInfo file = new FileInfo(_configPath + obj.GetType() + ".json");
         if (file.Exists)
         {
             using (StreamReader reader = new StreamReader(file.OpenRead()))
@@ -75,20 +81,15 @@ public class ConfigManager : MonoBehaviour
                 JsonUtility.FromJsonOverwrite(json, obj);
             }
         }
-        else
-        {
-            SaveConfigFile(fileName, obj);
-        }
     }
 
     /// <summary>
     /// Saves an object to a config file with the specified name.
     /// </summary>
-    /// <param name="fileName"></param>
-    /// <param name="obj"></param>
-    public void SaveConfigFile(string fileName, object obj)
+    /// <param name="obj">object to save</param>
+    public void SaveConfigFile(object obj)
     {
-        FileInfo file = new FileInfo(_configPath + fileName);
+        FileInfo file = new FileInfo(_configPath + obj.GetType() + ".json");
 
         FileStream stream;
 
@@ -106,13 +107,14 @@ public class ConfigManager : MonoBehaviour
             var json = JsonUtility.ToJson(obj);
             writer.Write(json);
         }
+        Debug.Log($"{Log.ShortTime()} Saved Config file {file.FullName}");
     }
 
     public void Awake()
     {
-        if (ActiveManager == null)
+        if (Instance == null)
         {
-            ActiveManager = this;
+            Instance = this;
             DontDestroyOnLoad(this);
         }
         else
