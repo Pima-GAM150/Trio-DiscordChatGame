@@ -12,47 +12,33 @@ using TMPro;
 
 public class MainMenuControl : MonoBehaviour
 {
-    /// <summary>
-    /// root object for the Discord Token screen.
-    /// </summary>
-    public GameObject TokenScreen;
-
-    /// <summary>
-    /// root object for the main menu page.
-    /// </summary>
-    public GameObject MainPage;
-
-    private TMP_InputField _tokenField;
+    public UISwitchGroup Switch;
+    public TMP_InputField TokenField;
     private Button _tokenButton;
 
     public void Start()
     {
-        _tokenField = TokenScreen.GetComponentInChildren<TMP_InputField>();
-        if (_tokenField == null)
-        {
-            Debug.LogError($"{Log.Timestamp()} No InputField on TokenScreen!");
-        }
         var discordConfig = ConfigManager.Instance.GetConfig<DiscordConfig>();
         if (!string.IsNullOrEmpty(discordConfig.Token))
         {
-            _tokenField.text = discordConfig.Token;
+            TokenField.text = discordConfig.Token;
         }
     }
 
     public void OnTokenScreenCommit(Button b)
     {
         _tokenButton = b;
-        _tokenButton.interactable = false;
+        _tokenButton.enabled = false;
 
-        _tokenField.DeactivateInputField();
+        TokenField.DeactivateInputField();
 
         var ctx = DiscordChatActor.Instance;
         Debug.Log($"{Log.Timestamp()} Sending Token to DiscordLauncher");
 
-        ctx.CreateClient(_tokenField.text);
+        ctx.CreateClient(TokenField.text);
         ctx.Client.Ready += Client_Ready;
         ctx.FailedLogin += Client_FailedLogin;
-        ctx.Run(_tokenField.text);
+        ctx.Run(TokenField.text);
     }
 
     private void Client_FailedLogin(object sender, Exception ex)
@@ -63,8 +49,8 @@ public class MainMenuControl : MonoBehaviour
             return;
         }
         PushNotification.Instance.Add(ex.Message, PushColor.Failed);
-        _tokenField.ActivateInputField();
-        _tokenButton.interactable = true;
+        TokenField.ActivateInputField();
+        _tokenButton.enabled = true;
     }
 
     private Task Client_Ready(ReadyEventArgs e)
@@ -76,12 +62,12 @@ public class MainMenuControl : MonoBehaviour
             return Task.CompletedTask;
         }
         var config = ConfigManager.Instance.GetConfig<DiscordConfig>();
-        config.Token = _tokenField.text;
+        config.Token = TokenField.text;
         config.Save();
 
+        Switch.SwitchTo("MainMenu");
+
         // switch menu screen.
-        TokenScreen.SetActive(false);
-        MainPage.SetActive(true);
         return Task.CompletedTask;
     }
 }
