@@ -9,13 +9,12 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 1f82403799ef46f4fbf4ab8e405f5f98, type: 3}
-  m_Name: Melee Range I
+  m_Name: Melee Damage II
   m_EditorClassIdentifier: 
-  name: Melee Range I
+  name: Melee Damage II
   melee: 1
   modifier:
-  - key: range
-    value: 0.2
-  description: Reach out and touch someone from further away.
-  nextSkill:
-  - {fileID: 11400000, guid: ff301070147802a4fa84d40580f1d8a4, type: 2}
+  - key: dmg
+    value: 1
+  description: Melee attacks do more damage.
+  nextSkill: []

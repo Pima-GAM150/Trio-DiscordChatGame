@@ -17,4 +17,6 @@ MonoBehaviour:
   - key: dmg
     value: 1
   description: Melee attacks do more damage.
-  nextSkill: []
+  nextSkill:
+  - {fileID: 11400000, guid: 7147538782c73f04e8b508cd775b6ed6, type: 2}
+  - {fileID: 11400000, guid: 96730962d5031d642b73a716edd4a077, type: 2}
