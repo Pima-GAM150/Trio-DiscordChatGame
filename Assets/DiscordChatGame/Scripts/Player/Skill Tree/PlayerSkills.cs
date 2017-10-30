@@ -56,7 +56,6 @@ public class PlayerSkills : MonoBehaviour {
     public void instaniateHorizontalLayoutGroup(HorizontalLayoutGroup prefab, Vector2 position)
     {
         HorizontalLayoutGroup newHLG = (HorizontalLayoutGroup)Instantiate(prefab);
-
         newHLG.transform.SetParent(canvas.transform, true);
         newHLG.transform.localPosition = position;
         
