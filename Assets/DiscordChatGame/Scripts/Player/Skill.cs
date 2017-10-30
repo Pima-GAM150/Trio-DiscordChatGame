@@ -13,6 +13,7 @@ public class Skill : ScriptableObject {
     public List<Skill> nextSkill;
 
     //This is my hack solution since Dictionaries do not show up in the inspector.  It is stupid, and I don't like it.
+    //
     [Serializable]
     public class MyDictionary
     {
