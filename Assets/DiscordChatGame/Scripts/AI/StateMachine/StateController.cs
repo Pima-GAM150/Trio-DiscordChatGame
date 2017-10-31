@@ -10,10 +10,14 @@ public class StateController : MonoBehaviour {
     public GameObject player;
 
     public float speed = 1f;
+    public float maxForce = 2f;
     public Rigidbody2D rb;
+    public float sightRange = 2f;
     public float width;
     public float distanceFromWall = 4.07f;
     public bool faceRight = true;
+
+    public Animator animator;
 
     private bool isActive = true;
 

@@ -6,16 +6,19 @@ public class EnemyController : MonoBehaviour {
 
     public Rigidbody2D rb;
     public GameObject player;
+    public Animator animator;
 
 	// Use this for initialization
 	void Start () {
         rb = this.gameObject.GetComponent<Rigidbody2D>();
         player = GameObject.FindGameObjectWithTag("Player");
-	}
+        //animator.Play("EnemySwordStab");
+    }
 	
 	// Update is called once per frame
 	void Update () {
         lookWhereMoving();
+        
 	}
 
     public void lookWhereMoving()
@@ -23,7 +26,7 @@ public class EnemyController : MonoBehaviour {
         //use the velocity as the direction you want to look at so that the vehicle will face the direction the force is being applied towards
         Vector2 direction = rb.velocity;
         Quaternion newRotation = Quaternion.LookRotation(Vector3.forward, player.transform.position - transform.position);
-        transform.rotation = Quaternion.Slerp(transform.rotation, newRotation, Time.deltaTime);
+        transform.rotation = Quaternion.Slerp(transform.rotation, newRotation, Time.deltaTime * 10f);
 
         //Quaternion newRotation = Quaternion.LookRotation(player.transform.position - transform.position, Vector2.right);
         //newRotation.x = 0f;

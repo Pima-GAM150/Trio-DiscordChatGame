@@ -77,6 +77,8 @@ GameObject:
   - component: {fileID: 58717087795727440}
   - component: {fileID: 114500494242945688}
   - component: {fileID: 114211817962496776}
+  - component: {fileID: 95978414366385968}
+  - component: {fileID: 114638614242218694}
   m_Layer: 0
   m_Name: EnemyCircle
   m_TagString: Untagged
@@ -106,8 +108,8 @@ Transform:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1766840095336306}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -7.52, y: -0.06, z: 0}
+  m_LocalRotation: {x: 0, y: 0, z: -0.7071068, w: 0.7071068}
+  m_LocalPosition: {x: -8.01, y: -0.06, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 4907337875249212}
@@ -115,7 +117,7 @@ Transform:
   - {fileID: 4271582100557090}
   m_Father: {fileID: 0}
   m_RootOrder: 0
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: -90}
 --- !u!4 &4271582100557090
 Transform:
   m_ObjectHideFlags: 1
@@ -183,7 +185,7 @@ PolygonCollider2D:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1050521799173530}
-  m_Enabled: 1
+  m_Enabled: 0
   m_Density: 1
   m_Material: {fileID: 0}
   m_IsTrigger: 1
@@ -209,6 +211,23 @@ PolygonCollider2D:
       - {x: 0.04402352, y: 0.016908318}
       - {x: 0.07599889, y: 0.045942992}
       - {x: 0.074999996, y: 0.074999996}
+--- !u!95 &95978414366385968
+Animator:
+  serializedVersion: 3
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1766840095336306}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: f44d92b628d081f428acea9dcfa5d117, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
 --- !u!114 &114036410574698244
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -237,6 +256,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   rb: {fileID: 0}
+  player: {fileID: 0}
+  animator: {fileID: 95978414366385968}
 --- !u!114 &114426500334754588
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -304,6 +325,29 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   player: {fileID: 4914602911952288, guid: 15d189efe622f284282888627166da36, type: 2}
   rb: {fileID: 50802850542226016}
+--- !u!114 &114638614242218694
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1766840095336306}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ef11d8523045dcb44953378035d0ca9a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  currentState: {fileID: 11400000, guid: d69c8c17b6c25994f811d12e7feb8c49, type: 2}
+  remainState: {fileID: 11400000, guid: 73d7596db81c9ef459ddc564639832f0, type: 2}
+  stateTimeElapsed: 0
+  player: {fileID: 0}
+  speed: 5
+  maxForce: 5
+  rb: {fileID: 50802850542226016}
+  sightRange: 2
+  width: 0
+  distanceFromWall: 4.07
+  faceRight: 1
+  animator: {fileID: 95978414366385968}
 --- !u!114 &114672882640576494
 MonoBehaviour:
   m_ObjectHideFlags: 1

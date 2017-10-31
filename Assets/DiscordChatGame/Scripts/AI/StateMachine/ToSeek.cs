@@ -8,7 +8,14 @@ public class ToSeek : Decision {
 
     public override bool Decide(StateController controller)
     {
-        return checkForTarget(controller, "Player");
+        //Debug.Log(checkForTarget(controller));
+        return checkForTarget(controller);
+    }
+
+    private bool checkForTarget(StateController controller)
+    {
+        Debug.Log(Vector2.Distance(controller.player.transform.position, controller.transform.position));
+        return Vector2.Distance(controller.player.transform.position, controller.transform.position) < controller.sightRange;
     }
 
     private bool checkForTarget(StateController controller, String name)
