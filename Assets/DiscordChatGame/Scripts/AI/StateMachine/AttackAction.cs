@@ -6,6 +6,8 @@ using UnityEngine;
 [CreateAssetMenu(menuName = "StateMachine/Actions/AttackAction")]
 public class AttackAction : Action {
 
+    bool playerHit = false;
+
     public override void Act(StateController controller)
     {
         BasicAttack(controller);
@@ -13,16 +15,12 @@ public class AttackAction : Action {
 
     public void BasicAttack(StateController controller)
     {
+        //Debug.Log("Playing the Animation!");
+        //Debug.Log(playerHit);
         controller.animator.Play("EnemySwordStabAnimation");
     }
 
-    public void OnTriggerEnter2D(Collider2D collider)
-    {
-        if(collider.tag.Contains("Player"))
-        {
-            Debug.Log("Hit the player!");
-        }
-    }
+
 
 
 }

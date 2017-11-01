@@ -318,7 +318,7 @@ MonoBehaviour:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1766840095336306}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 107e075daf35e074ea4fad89a5c9c3be, type: 3}
   m_Name: 
@@ -343,7 +343,7 @@ MonoBehaviour:
   speed: 5
   maxForce: 5
   rb: {fileID: 50802850542226016}
-  sightRange: 2
+  sightRange: 1
   width: 0
   distanceFromWall: 4.07
   faceRight: 1

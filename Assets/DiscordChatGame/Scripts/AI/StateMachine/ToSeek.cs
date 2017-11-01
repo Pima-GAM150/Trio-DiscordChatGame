@@ -14,7 +14,7 @@ public class ToSeek : Decision {
 
     private bool checkForTarget(StateController controller)
     {
-        Debug.Log(Vector2.Distance(controller.player.transform.position, controller.transform.position));
+        //Debug.Log(Vector2.Distance(controller.player.transform.position, controller.transform.position));
         return Vector2.Distance(controller.player.transform.position, controller.transform.position) < controller.sightRange;
     }
 

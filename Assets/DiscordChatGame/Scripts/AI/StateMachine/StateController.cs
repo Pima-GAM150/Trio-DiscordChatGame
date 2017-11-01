@@ -18,8 +18,10 @@ public class StateController : MonoBehaviour {
     public bool faceRight = true;
 
     public Animator animator;
+    public bool hitPlayer;
 
     private bool isActive = true;
+    
 
 	// Use this for initialization
 	void Start () {
@@ -36,6 +38,12 @@ public class StateController : MonoBehaviour {
         } else
         {
             currentState.UpdateState(this);
+        }
+        if(hitPlayer)
+        {
+            Debug.Log("Setting hitPlayer back to false.");
+            player.GetComponent<PlayerController>().hp -= 1f;
+            hitPlayer = false;
         }
 	}
 

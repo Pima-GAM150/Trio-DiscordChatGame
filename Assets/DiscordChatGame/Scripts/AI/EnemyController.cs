@@ -26,7 +26,7 @@ public class EnemyController : MonoBehaviour {
         //use the velocity as the direction you want to look at so that the vehicle will face the direction the force is being applied towards
         Vector2 direction = rb.velocity;
         Quaternion newRotation = Quaternion.LookRotation(Vector3.forward, player.transform.position - transform.position);
-        transform.rotation = Quaternion.Slerp(transform.rotation, newRotation, Time.deltaTime * 10f);
+        transform.rotation = Quaternion.Slerp(transform.rotation, newRotation, Time.deltaTime * 5f);
 
         //Quaternion newRotation = Quaternion.LookRotation(player.transform.position - transform.position, Vector2.right);
         //newRotation.x = 0f;
