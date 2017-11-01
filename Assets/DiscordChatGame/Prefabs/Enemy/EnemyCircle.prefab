@@ -21,6 +21,7 @@ GameObject:
   - component: {fileID: 4271582100557090}
   - component: {fileID: 212958646368181958}
   - component: {fileID: 60437779704701956}
+  - component: {fileID: 114449837493947090}
   m_Layer: 0
   m_Name: EnemySwordPlacehold
   m_TagString: Untagged
@@ -79,6 +80,8 @@ GameObject:
   - component: {fileID: 114211817962496776}
   - component: {fileID: 95978414366385968}
   - component: {fileID: 114638614242218694}
+  - component: {fileID: 114990582143983822}
+  - component: {fileID: 58947737544197688}
   m_Layer: 0
   m_Name: EnemyCircle
   m_TagString: Untagged
@@ -170,7 +173,7 @@ CircleCollider2D:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1766840095336306}
-  m_Enabled: 1
+  m_Enabled: 0
   m_Density: 1
   m_Material: {fileID: 0}
   m_IsTrigger: 0
@@ -179,6 +182,21 @@ CircleCollider2D:
   m_Offset: {x: 0, y: 0}
   serializedVersion: 2
   m_Radius: 0.475
+--- !u!58 &58947737544197688
+CircleCollider2D:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1766840095336306}
+  m_Enabled: 1
+  m_Density: 1
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_UsedByEffector: 0
+  m_UsedByComposite: 0
+  m_Offset: {x: 0, y: 0}
+  serializedVersion: 2
+  m_Radius: 5
 --- !u!60 &60437779704701956
 PolygonCollider2D:
   m_ObjectHideFlags: 1
@@ -258,6 +276,9 @@ MonoBehaviour:
   rb: {fileID: 0}
   player: {fileID: 0}
   animator: {fileID: 95978414366385968}
+  nearByObjects: []
+  seperation: {fileID: 114990582143983822}
+  maxForce: 5
 --- !u!114 &114426500334754588
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -312,6 +333,18 @@ MonoBehaviour:
   m_FallbackScreenDPI: 96
   m_DefaultSpriteDPI: 96
   m_DynamicPixelsPerUnit: 1
+--- !u!114 &114449837493947090
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1050521799173530}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 320b7c02ad7d4094db5eb18edf0d031c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  controller: {fileID: 0}
 --- !u!114 &114500494242945688
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -348,6 +381,7 @@ MonoBehaviour:
   distanceFromWall: 4.07
   faceRight: 1
   animator: {fileID: 95978414366385968}
+  hitPlayer: 0
 --- !u!114 &114672882640576494
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -360,6 +394,19 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   sprite: {fileID: 212760539658363274}
+--- !u!114 &114990582143983822
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1766840095336306}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d3942041fa77ec24a9a125f7316aad71, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  sepMaxAcc: 25
+  maxSepDist: 2
 --- !u!212 &212337821269684520
 SpriteRenderer:
   m_ObjectHideFlags: 1
