@@ -84,7 +84,7 @@ GameObject:
   - component: {fileID: 58947737544197688}
   m_Layer: 0
   m_Name: EnemyCircle
-  m_TagString: Untagged
+  m_TagString: Enemy
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -173,7 +173,7 @@ CircleCollider2D:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1766840095336306}
-  m_Enabled: 0
+  m_Enabled: 1
   m_Density: 1
   m_Material: {fileID: 0}
   m_IsTrigger: 0
@@ -273,6 +273,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5414fc5e2939f9d44b6fa069f042ee1c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  name: 
+  hp: 1
+  dmg: 1
+  color: {r: 0, g: 0, b: 0, a: 0}
+  melee: 0
+  timeAlive: 0
   rb: {fileID: 0}
   player: {fileID: 0}
   animator: {fileID: 95978414366385968}
@@ -388,7 +394,7 @@ MonoBehaviour:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1766840095336306}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: d07c9dfae1ea519449bbb78f02d2150f, type: 3}
   m_Name: 

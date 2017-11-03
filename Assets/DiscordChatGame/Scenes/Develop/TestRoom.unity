@@ -302,7 +302,7 @@ RectTransform:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 117008216}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 572.5, y: 236, z: 0}
+  m_LocalPosition: {x: 458, y: 208, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 55530463}
@@ -363,16 +363,6 @@ Prefab:
       propertyPath: horizontalLayoutGroup
       value: 
       objectReference: {fileID: 55530464}
-    - target: {fileID: 114745001347335324, guid: 15d189efe622f284282888627166da36,
-        type: 2}
-      propertyPath: m_Enabled
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 1882473682109054, guid: 15d189efe622f284282888627166da36, type: 2}
-      propertyPath: m_Icon
-      value: 
-      objectReference: {fileID: -964228994112308473, guid: 0000000000000000d000000000000000,
-        type: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 15d189efe622f284282888627166da36, type: 2}
   m_IsPrefabParent: 0
@@ -415,14 +405,14 @@ Prefab:
       propertyPath: m_RootOrder
       value: 6
       objectReference: {fileID: 0}
-    - target: {fileID: 58947737544197688, guid: 7e5bfb0ffb7191e47aa3b691f5641568,
-        type: 2}
-      propertyPath: m_Enabled
-      value: 1
-      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 7e5bfb0ffb7191e47aa3b691f5641568, type: 2}
   m_IsPrefabParent: 0
+--- !u!1 &394137815 stripped
+GameObject:
+  m_PrefabParentObject: {fileID: 1766840095336306, guid: 7e5bfb0ffb7191e47aa3b691f5641568,
+    type: 2}
+  m_PrefabInternal: {fileID: 321616989}
 --- !u!1 &513364700
 GameObject:
   m_ObjectHideFlags: 0
@@ -672,6 +662,10 @@ MonoBehaviour:
   player: {fileID: 700455592}
   prefabs:
   - {fileID: 1766840095336306, guid: 7e5bfb0ffb7191e47aa3b691f5641568, type: 2}
+  enemyDictionary:
+  - key: EnemyCircle
+    value: {fileID: 394137815}
+  enemyList: []
 --- !u!1 &1080089920
 GameObject:
   m_ObjectHideFlags: 0
