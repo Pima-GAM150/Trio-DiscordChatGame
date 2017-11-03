@@ -11,7 +11,7 @@ public class DiscordCommands
     [Command("spawn")]
     [Aliases("su", "spawnunit")]
     [Description("Spawns a unit of type if user has enough funds")]
-    public async Task SpawnUnit(CommandContext ctx, [Description("Name of unit. See: !listunits")] string unit)
+    public async Task SpawnUnit(CommandContext ctx, [Description("Name of unit. See: !listunits")] string unit, [Description("Number of unit")] uint count)
     {
         await ctx.TriggerTypingAsync();
 

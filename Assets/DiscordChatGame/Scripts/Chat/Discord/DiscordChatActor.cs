@@ -20,6 +20,8 @@ public class DiscordChatActor : MonoBehaviour
     public DiscordChannel CheckBalanceChannel;
     public DiscordGuild Guild;
 
+    public List<DiscordMember> Members = new List<DiscordMember>();
+
     public delegate void ExceptionEventHandler(object sender, Exception ex);
 
     public static DiscordChatActor Instance { get; private set; }
@@ -71,12 +73,19 @@ public class DiscordChatActor : MonoBehaviour
 
     private Task Client_GuildMemberRemoved(GuildMemberRemoveEventArgs e)
     {
-        throw new NotImplementedException();
+        if (e.Guild == Guild && Members.Contains(e.Member))
+            Members.Remove(e.Member);
+
+        return Task.CompletedTask;
     }
 
     private Task Client_GuildMemberAdded(GuildMemberAddEventArgs e)
     {
-        throw new NotImplementedException();
+        if (e.Guild == Guild)
+        {
+            Members.Add(e.Member);
+        }
+        return Task.CompletedTask;
     }
 
     private async Task Client_Ready(ReadyEventArgs e)
@@ -86,7 +95,6 @@ public class DiscordChatActor : MonoBehaviour
             MainThreadQueue.Instance.Queue(async () => await Client_Ready(e));
             return;
         }
-
         Debug.Log($"{Log.Timestamp()} Discord-ClientReady: Client is connected.");
         PushNotification.Instance.Add($"Connected as: {e.Client.CurrentUser.Username}", PushColor.Success);
 
