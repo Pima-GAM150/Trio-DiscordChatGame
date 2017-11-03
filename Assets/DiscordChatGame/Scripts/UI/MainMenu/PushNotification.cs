@@ -22,7 +22,6 @@ public class PushNotification : MonoBehaviour
     public static PushNotification Instance { get; private set; }
 
     private ScrollRect _scrollRect;
-    private bool _queueActive;
 
     [Tooltip("Color to use on push notifications from Discord-Info")]
     public Color ColorInfo = Color.white;
@@ -43,9 +42,7 @@ public class PushNotification : MonoBehaviour
     public Color ColorFailed = Color.red;
 
     public GameObject PushNotificationPrefab;
-    public int Duration;
-
-    private readonly Queue<Tuple<GameObject, int>> _activeQueue = new Queue<Tuple<GameObject, int>>();
+    public int Duration = 2;
 
     private void Awake()
     {
@@ -95,15 +92,18 @@ public class PushNotification : MonoBehaviour
 
     public GameObject Add(string msg, PushColor color)
     {
+        return Add(msg, GetColor(color));
+    }
+
+    public GameObject Add(string msg, Color color)
+    {
         var obj = Instantiate(PushNotificationPrefab, _scrollRect.content);
         var text = obj.GetComponent<Text>();
 
-        text.color = GetColor(color);
+        text.color = color;
         text.text = msg;
-        _activeQueue.Enqueue(new Tuple<GameObject, int>(obj, Mathf.RoundToInt(Time.time) + Duration));
 
-        if (!_queueActive)
-            StartQueue();
+        QueueDestroy(obj, Duration);
 
         //Canvas.ForceUpdateCanvases();
         _scrollRect.verticalNormalizedPosition = 0f;
@@ -112,28 +112,11 @@ public class PushNotification : MonoBehaviour
         return obj;
     }
 
-    private async Task StartQueue()
+    private async Task QueueDestroy(GameObject obj, int destroyTime)
     {
-        if (_queueActive)
-            return;
+        await Task.Delay(destroyTime * 1000);
 
-        _queueActive = true;
-
-        while (_activeQueue.Count > 0)
-        {
-            var obj = _activeQueue.Dequeue();
-
-            if (Time.time > obj.Item2)
-                Destroy(obj.Item1);
-            else
-            {
-                await Task.Delay(Mathf.RoundToInt(obj.Item2 - Time.time));
-
-                // this is for the sake of not being spammed with errors after ending play
-                if (Application.isPlaying)
-                    Destroy(obj.Item1);
-            }
-        }
-        _queueActive = false;
+        if (Application.isPlaying)
+            Destroy(obj);
     }
 }

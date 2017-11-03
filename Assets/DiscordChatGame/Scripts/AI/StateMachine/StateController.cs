@@ -10,12 +10,18 @@ public class StateController : MonoBehaviour {
     public GameObject player;
 
     public float speed = 1f;
+    public float maxForce = 2f;
     public Rigidbody2D rb;
+    public float sightRange = 2f;
     public float width;
     public float distanceFromWall = 4.07f;
     public bool faceRight = true;
 
+    public Animator animator;
+    public bool hitPlayer;
+
     private bool isActive = true;
+    
 
 	// Use this for initialization
 	void Start () {
@@ -32,6 +38,12 @@ public class StateController : MonoBehaviour {
         } else
         {
             currentState.UpdateState(this);
+        }
+        if(hitPlayer)
+        {
+            Debug.Log("Setting hitPlayer back to false.");
+            player.GetComponent<PlayerController>().hp -= 1f;
+            hitPlayer = false;
         }
 	}
 
