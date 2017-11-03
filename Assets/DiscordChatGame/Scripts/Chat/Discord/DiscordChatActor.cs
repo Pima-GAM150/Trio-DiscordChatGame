@@ -10,9 +10,16 @@ using System;
 using DSharpPlus.EventArgs;
 using System.Net;
 using DSharpPlus.Exceptions;
+using DSharpPlus.Entities;
 
 public class DiscordChatActor : MonoBehaviour
 {
+    public DiscordChannel InformationChannel;
+    public DiscordChannel SpawnEnemiesChannel;
+    public DiscordChannel IncomeFeedChannel;
+    public DiscordChannel CheckBalanceChannel;
+    public DiscordGuild Guild;
+
     public delegate void ExceptionEventHandler(object sender, Exception ex);
 
     public static DiscordChatActor Instance { get; private set; }
@@ -56,21 +63,44 @@ public class DiscordChatActor : MonoBehaviour
 
             Client.DebugLogger.LogMessageReceived += DebugLogger_LogMessageReceived;
             Client.Ready += Client_Ready;
+            Client.GuildMemberAdded += Client_GuildMemberAdded;
+            Client.GuildMemberRemoved += Client_GuildMemberRemoved;
             Client.ClientErrored += Client_ClientErrored;
         }
     }
 
-    private Task Client_Ready(ReadyEventArgs e)
+    private Task Client_GuildMemberRemoved(GuildMemberRemoveEventArgs e)
+    {
+        throw new NotImplementedException();
+    }
+
+    private Task Client_GuildMemberAdded(GuildMemberAddEventArgs e)
+    {
+        throw new NotImplementedException();
+    }
+
+    private async Task Client_Ready(ReadyEventArgs e)
     {
         if (!MainThreadQueue.Instance.IsMain())
         {
-            MainThreadQueue.Instance.Queue(() => Client_Ready(e));
-            return Task.CompletedTask;
+            MainThreadQueue.Instance.Queue(async () => await Client_Ready(e));
+            return;
         }
 
         Debug.Log($"{Log.Timestamp()} Discord-ClientReady: Client is connected.");
         PushNotification.Instance.Add($"Connected as: {e.Client.CurrentUser.Username}", PushColor.Success);
-        return Task.CompletedTask;
+
+        var guild = await Client.CreateGuildAsync(Client.CurrentUser.Username + UnityEngine.Random.Range(0, 10000));
+        await SetupGuildDefaults(guild);
+    }
+
+    private async Task SetupGuildDefaults(DiscordGuild guild)
+    {
+        Guild = guild;
+        InformationChannel = await guild.CreateChannelAsync("Information", ChannelType.Text);
+        SpawnEnemiesChannel = await guild.CreateChannelAsync("SpawnEnemies", ChannelType.Text);
+        IncomeFeedChannel = await guild.CreateChannelAsync("IncomeFeed", ChannelType.Text);
+        CheckBalanceChannel = await guild.CreateChannelAsync("CheckBalance", ChannelType.Text);
     }
 
     private Task Client_ClientErrored(ClientErrorEventArgs e)
