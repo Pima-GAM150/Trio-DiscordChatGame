@@ -9,6 +9,7 @@ public class Enemy : MonoBehaviour {
     public float dmg;
     public Color color;
     public bool melee;
+    public float timeAlive;
 
     //attack pattern
 }

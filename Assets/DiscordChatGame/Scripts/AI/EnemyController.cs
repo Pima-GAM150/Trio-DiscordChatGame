@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class EnemyController : MonoBehaviour {
+public class EnemyController : Enemy {
 
     public Rigidbody2D rb;
     public GameObject player;
@@ -31,13 +31,6 @@ public class EnemyController : MonoBehaviour {
         Vector2 direction = rb.velocity;
         Quaternion newRotation = Quaternion.LookRotation(Vector3.forward, player.transform.position - transform.position);
         transform.rotation = Quaternion.Slerp(transform.rotation, newRotation, Time.deltaTime * 5f);
-
-        //Quaternion newRotation = Quaternion.LookRotation(player.transform.position - transform.position, Vector2.right);
-        //newRotation.x = 0f;
-        //newRotation.y = 0f;
-
-        //transform.rotation = newRotation;
-        //transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.LookRotation(direction), 2f * Time.deltaTime);
     }
 
     private void ApplyForce(Vector2 force)
@@ -50,7 +43,6 @@ public class EnemyController : MonoBehaviour {
             rb.velocity = rb.velocity.normalized * maxForce;
         }
 
-        //controller.transform.position += Vector3.right * 0.01f;
     }
 
     //Adds all near by objects to a list/hashset
@@ -58,7 +50,7 @@ public class EnemyController : MonoBehaviour {
     {
         //get a list of targets
         //send those to a separation function
-        if (!collider.name.Equals("Player"))
+        if (!collider.name.Equals("Player") && collider.gameObject != this.gameObject)
         {
             nearByObjects.Add(collider.gameObject);
         }

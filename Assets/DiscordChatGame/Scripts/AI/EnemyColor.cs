@@ -2,6 +2,9 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+/**
+Do not need to use this right now as we are hardcoding the colors for each enemy type.
+*/
 public class EnemyColor : MonoBehaviour {
 
     public SpriteRenderer sprite;

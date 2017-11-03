@@ -42,7 +42,7 @@ public class StateController : MonoBehaviour {
         if(hitPlayer)
         {
             Debug.Log("Setting hitPlayer back to false.");
-            player.GetComponent<PlayerController>().hp -= 1f;
+            player.GetComponent<PlayerController>().hp -= this.gameObject.GetComponent<Enemy>().dmg;
             hitPlayer = false;
         }
 	}

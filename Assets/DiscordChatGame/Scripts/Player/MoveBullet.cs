@@ -12,13 +12,15 @@ public class MoveBullet : MonoBehaviour {
     public Vector3 mousePosition;
 
     private float lifeTime;
-    
+    private Vector3 desired;
+
 
     // Use this for initialization
     void Start () {
-        Debug.Log(Input.mousePosition);
+        //Debug.Log(Input.mousePosition);
         mousePosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-
+        mousePosition.z = 0f;
+        desired = mousePosition - this.transform.position;
     }
 
     // Update is called once per frame
@@ -37,8 +39,6 @@ public class MoveBullet : MonoBehaviour {
         //rb.velocity += Vector3.forward * speed * 10;
         if (this.gameObject != null)
         {
-            Vector3 desired = mousePosition - this.transform.position;
-
             //normalize
             desired.Normalize();
             this.transform.position += desired / speed;
@@ -46,6 +46,16 @@ public class MoveBullet : MonoBehaviour {
 
 
         //Might want to change this to use a rigidbody and add velocity
+    }
+
+    public void OnCollisionEnter2D(Collision2D collider)
+    {
+        Debug.Log(collider.gameObject.name);
+        if(collider.gameObject.tag.Contains("Enemy"))
+        {
+            Debug.Log("hit and enemy");
+            Destroy(this.gameObject);
+        }
     }
 
 }
