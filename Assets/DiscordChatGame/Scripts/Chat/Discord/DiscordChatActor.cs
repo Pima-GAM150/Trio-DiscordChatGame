@@ -73,6 +73,12 @@ public class DiscordChatActor : MonoBehaviour
 
     private Task Client_GuildMemberRemoved(GuildMemberRemoveEventArgs e)
     {
+        if (!MainThreadQueue.Instance.IsMain())
+        {
+            MainThreadQueue.Instance.Queue(() => Client_GuildMemberRemoved(e));
+            return Task.CompletedTask;
+        }
+
         if (e.Guild == Guild && Members.Contains(e.Member))
             Members.Remove(e.Member);
 
@@ -81,6 +87,11 @@ public class DiscordChatActor : MonoBehaviour
 
     private Task Client_GuildMemberAdded(GuildMemberAddEventArgs e)
     {
+        if (!MainThreadQueue.Instance.IsMain())
+        {
+            MainThreadQueue.Instance.Queue(() => Client_GuildMemberAdded(e));
+            return Task.CompletedTask;
+        }
         if (e.Guild == Guild)
         {
             Members.Add(e.Member);
