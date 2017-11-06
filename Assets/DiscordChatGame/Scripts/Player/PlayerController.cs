@@ -5,6 +5,8 @@ using UnityEngine;
 public class PlayerController : MonoBehaviour {
 
     public float hp = 2f;
+    public float dmg = 1f;
+    public float currentIncome = 0f;
 
 	// Use this for initialization
 	void Start () {
