@@ -302,7 +302,7 @@ RectTransform:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 117008216}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 458, y: 208, z: 0}
+  m_LocalPosition: {x: 572.5, y: 236, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 55530463}
@@ -408,11 +408,6 @@ Prefab:
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 7e5bfb0ffb7191e47aa3b691f5641568, type: 2}
   m_IsPrefabParent: 0
---- !u!1 &394137815 stripped
-GameObject:
-  m_PrefabParentObject: {fileID: 1766840095336306, guid: 7e5bfb0ffb7191e47aa3b691f5641568,
-    type: 2}
-  m_PrefabInternal: {fileID: 321616989}
 --- !u!1 &513364700
 GameObject:
   m_ObjectHideFlags: 0
@@ -514,6 +509,11 @@ Prefab:
       propertyPath: m_RootOrder
       value: 7
       objectReference: {fileID: 0}
+    - target: {fileID: 114723594729080784, guid: 1daa3fe493660b84ba3dac7c286b64be,
+        type: 2}
+      propertyPath: pc
+      value: 
+      objectReference: {fileID: 700455594}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 1daa3fe493660b84ba3dac7c286b64be, type: 2}
   m_IsPrefabParent: 0
@@ -619,6 +619,12 @@ GameObject:
   m_PrefabParentObject: {fileID: 1634232108535696, guid: 15d189efe622f284282888627166da36,
     type: 2}
   m_PrefabInternal: {fileID: 286879647}
+--- !u!114 &700455594 stripped
+MonoBehaviour:
+  m_PrefabParentObject: {fileID: 114476792946366444, guid: 15d189efe622f284282888627166da36,
+    type: 2}
+  m_PrefabInternal: {fileID: 286879647}
+  m_Script: {fileID: 11500000, guid: a539f6b3e94b2f44c90092d27612e7c4, type: 3}
 --- !u!1 &723172255
 GameObject:
   m_ObjectHideFlags: 0
@@ -662,9 +668,6 @@ MonoBehaviour:
   player: {fileID: 700455592}
   prefabs:
   - {fileID: 1766840095336306, guid: 7e5bfb0ffb7191e47aa3b691f5641568, type: 2}
-  enemyDictionary:
-  - key: EnemyCircle
-    value: {fileID: 394137815}
   enemyList: []
 --- !u!1 &1080089920
 GameObject:

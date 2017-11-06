@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System.Linq;
 
 public class EnemyController : Enemy {
 
@@ -16,6 +17,7 @@ public class EnemyController : Enemy {
     void Start () {
         rb = this.gameObject.GetComponent<Rigidbody2D>();
         player = GameObject.FindGameObjectWithTag("Player");
+        incomeMultiplier = cost / 4f;
         //animator.Play("EnemySwordStab");
     }
 	
@@ -23,6 +25,11 @@ public class EnemyController : Enemy {
 	void Update () {
         lookWhereMoving();
         ApplyForce(seperation.Separate(nearByObjects));
+        if(hp <= 0)
+        {
+            Debug.Log("Dead!");
+            onDeath();
+        }
 	}
 
     public void lookWhereMoving()
@@ -62,5 +69,19 @@ public class EnemyController : Enemy {
     private void OnTriggerExit2D(Collider2D collider)
     {
         nearByObjects.Remove(collider.gameObject);
+    }
+
+    public void onDeath()
+    {
+        //Wrapping this in an empty check otherwise it never makes it to the Destroy function
+        if(SpawnEnemy.enemyIncome.Count > 0)
+        {
+            EnemyIncome userIncome;
+            userIncome = SpawnEnemy.enemyIncome.First<EnemyIncome>(s => s.key.Equals(name));
+            userIncome.value += timeAlive * incomeMultiplier;
+            Debug.Log(userIncome.value);
+        }
+
+        Destroy(this.gameObject);
     }
 }

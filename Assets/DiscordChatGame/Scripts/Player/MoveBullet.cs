@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class MoveBullet : MonoBehaviour {
 
+    public PlayerController pc;  
     public GameObject spawnPoint;
     public float speed = 100f;
     public float lifeSpan = 2f;
@@ -53,7 +54,12 @@ public class MoveBullet : MonoBehaviour {
         Debug.Log(collider.gameObject.name);
         if(collider.gameObject.tag.Contains("Enemy"))
         {
-            Debug.Log("hit and enemy");
+            collider.gameObject.GetComponent<Enemy>().hp -= pc.dmg;
+            //pc.currentIncome += collider.gameObject.GetComponent<Enemy>().cost;
+            Destroy(this.gameObject);
+        }
+        if(collider.gameObject.name.Contains("Wall"))
+        {
             Destroy(this.gameObject);
         }
     }

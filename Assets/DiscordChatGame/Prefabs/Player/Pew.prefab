@@ -99,6 +99,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 34784346135c2d2479fa49c78b219972, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  pc: {fileID: 114476792946366444, guid: 15d189efe622f284282888627166da36, type: 2}
   spawnPoint: {fileID: 1882473682109054, guid: 15d189efe622f284282888627166da36, type: 2}
   speed: 4
   lifeSpan: 5
