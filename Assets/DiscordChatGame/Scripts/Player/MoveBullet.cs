@@ -55,6 +55,7 @@ public class MoveBullet : MonoBehaviour {
         if(collider.gameObject.tag.Contains("Enemy"))
         {
             collider.gameObject.GetComponent<Enemy>().hp -= pc.dmg;
+            collider.gameObject.GetComponent<EnemyController>().onDeath();
             //pc.currentIncome += collider.gameObject.GetComponent<Enemy>().cost;
             Destroy(this.gameObject);
         }
