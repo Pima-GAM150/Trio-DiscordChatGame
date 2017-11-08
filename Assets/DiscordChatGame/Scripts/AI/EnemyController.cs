@@ -80,8 +80,9 @@ public class EnemyController : Enemy {
             userIncome = SpawnEnemy.enemyIncome.First<EnemyIncome>(s => s.key.Equals(name));
             userIncome.value += timeAlive * incomeMultiplier;
             Debug.Log(userIncome.value);
+            
         }
-
+        player.GetComponent<PlayerController>().currentIncome += cost;
         Destroy(this.gameObject);
     }
 }

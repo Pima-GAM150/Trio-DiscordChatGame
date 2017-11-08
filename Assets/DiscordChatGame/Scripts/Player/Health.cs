@@ -31,7 +31,6 @@ public class Health : MonoBehaviour {
     {
         GameObject newHeart = (GameObject)Instantiate(heartPrefab, healthbar.transform.position, healthbar.transform.rotation);
         newHeart.transform.SetParent(healthbar.transform);
-
         hearts.Add(newHeart);
     }
 
