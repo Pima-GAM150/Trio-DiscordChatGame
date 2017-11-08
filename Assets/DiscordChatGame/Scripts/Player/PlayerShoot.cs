@@ -6,6 +6,9 @@ public class PlayerShoot : MonoBehaviour {
 
     public GameObject bulletPrefab;
     public GameObject spawnPosition;
+    public float shootDelay = 0.25f;
+
+    private float shootTimer = 0f;
 
 	// Use this for initialization
 	void Start () {
@@ -14,9 +17,15 @@ public class PlayerShoot : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
+        shootTimer += Time.deltaTime;
 		if(Input.GetMouseButtonDown(0))
         {
-            instantiateBullet(bulletPrefab, spawnPosition.transform.position);
+            if(shootTimer > shootDelay)
+            {
+                instantiateBullet(bulletPrefab, spawnPosition.transform.position);
+                shootTimer = 0f;
+            }
+            
         }
 	}
 

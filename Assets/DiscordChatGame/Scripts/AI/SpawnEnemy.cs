@@ -8,20 +8,36 @@ using System.Linq;
 public class SpawnEnemy : MonoBehaviour {
 
     public GameObject player;
+    public GameObject gameArea;
     public List<GameObject> prefabs;
     public static List<EnemyDictionary> enemyDictionary = new List<EnemyDictionary>(); //a list of all the enemy prefabs that can be spawned
     public static List<EnemyIncome> enemyIncome = new List<EnemyIncome>(); //list of discord member's income
     public List<GameObject> enemyList = new List<GameObject>(); //list of current enemies alive in the game
-    
+
+    private float minX;
+    private float minY;
+    private float maxX;
+    private float maxY;
+
     // Use this for initialization
     void Start () {
         //instantiateEnemy("EnemyCircle", "Enemy", 5);
+        minX = gameArea.GetComponent<SpriteRenderer>().bounds.min.x;
+        minY = gameArea.GetComponent<SpriteRenderer>().bounds.min.y;
+        maxX = gameArea.GetComponent<SpriteRenderer>().bounds.max.x;
+        maxY = gameArea.GetComponent<SpriteRenderer>().bounds.max.y;
+        Debug.Log(minX + ", " + minY + ", " + maxX + ", " + maxY);
+        for(int i = 0; i < 1; i++)
+        {
+            Debug.Log("Creating enemy!");
+            instantiateEnemy(prefabs[0], getRandomPosition());
+        }
     }
 	
 	// Update is called once per frame
 	void Update () {
         incrementEnemyTimeAlive();
-        addNewDiscordMembers();
+        //addNewDiscordMembers();
 
     }
 
@@ -40,6 +56,8 @@ public class SpawnEnemy : MonoBehaviour {
                 Vector2 position = getRandomPosition();
                 GameObject newEnemy = (GameObject)Instantiate(prefab, position, Quaternion.identity);
                 newEnemy.name = userName;
+                //Random seperation distance
+                newEnemy.GetComponent<Separation>().maxSepDist = Random.Range(0.1f, 2.1f);
                 enemyList.Add(newEnemy);
             }
         } else
@@ -73,11 +91,28 @@ public class SpawnEnemy : MonoBehaviour {
     public Vector2 getRandomPosition()
     {
         Transform location = player.transform;
+
         float ang = Random.value * 360;
         float radius = 10f;
-        Vector2 pos;
-        pos.x = location.position.x + radius * Mathf.Sin(ang * Mathf.Deg2Rad);
-        pos.y = location.position.y + radius * Mathf.Cos(ang * Mathf.Deg2Rad);
+        Vector2 pos = Vector2.zero;
+        pos.x = location.transform.position.x + radius * Mathf.Sin(ang * Mathf.Deg2Rad);
+        //while (pos.x < minX || pos.x > maxX)
+        //{
+            
+        //    pos.x = location.transform.position.x + radius * Mathf.Sin(ang * Mathf.Deg2Rad);
+        //    Debug.Log("Recalculating the pos.x.");
+        //}
+
+        pos.y = location.transform.position.y + radius * Mathf.Cos(ang * Mathf.Deg2Rad);
+        //while (pos.y < minY || pos.y > maxY)
+        //{
+        //    Debug.Log("Recalculating the pos.y.");
+        //    pos.y = location.transform.position.y + radius * Mathf.Cos(ang * Mathf.Deg2Rad);
+        //}
+        Debug.Log(pos + ", " + (pos.x < minX || pos.x > maxX));
+
+
+
         return pos;
     }
 

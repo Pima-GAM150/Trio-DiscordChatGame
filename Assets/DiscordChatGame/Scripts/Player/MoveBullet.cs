@@ -55,7 +55,7 @@ public class MoveBullet : MonoBehaviour {
         if(collider.gameObject.tag.Contains("Enemy"))
         {
             collider.gameObject.GetComponent<Enemy>().hp -= pc.dmg;
-            //pc.currentIncome += collider.gameObject.GetComponent<Enemy>().cost;
+            pc.currentIncome += collider.gameObject.GetComponent<Enemy>().cost;
             Destroy(this.gameObject);
         }
         if(collider.gameObject.name.Contains("Wall"))
