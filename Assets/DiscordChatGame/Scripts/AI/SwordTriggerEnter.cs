@@ -21,8 +21,9 @@ public class SwordTriggerEnter : MonoBehaviour {
         //Debug.Log(collider.name);
         if (collider.tag.Contains("Player"))
         {
-            //Debug.Log("Hit the player!");
+            Debug.Log("Hit the player!");
             controller.hitPlayer = true;
+            controller.player.GetComponent<PlayerController>().hp -= controller.gameObject.GetComponent<Enemy>().dmg;
         }
     }
 }
