@@ -26,10 +26,8 @@ public class SpawnEnemy : MonoBehaviour {
         minY = gameArea.GetComponent<SpriteRenderer>().bounds.min.y;
         maxX = gameArea.GetComponent<SpriteRenderer>().bounds.max.x;
         maxY = gameArea.GetComponent<SpriteRenderer>().bounds.max.y;
-        Debug.Log(minX + ", " + minY + ", " + maxX + ", " + maxY);
-        for(int i = 0; i < 1; i++)
+        for(int i = 0; i < 5; i++)
         {
-            Debug.Log("Creating enemy!");
             instantiateEnemy(prefabs[0], getRandomPosition());
         }
     }
@@ -58,6 +56,19 @@ public class SpawnEnemy : MonoBehaviour {
                 newEnemy.name = userName;
                 //Random seperation distance
                 newEnemy.GetComponent<Separation>().maxSepDist = Random.Range(0.1f, 2.1f);
+
+                int leftHanded = Random.Range(0, 2);
+                if(leftHanded == 0)
+                {
+                    Debug.Log("Left-handed!");
+                    newEnemy.transform.Find("EnemySwordPlaceholdLeftHand").gameObject.SetActive(true);
+                    newEnemy.transform.Find("EnemySwordPlacehold").gameObject.SetActive(false);
+                } else
+                {
+                    Debug.Log("Right-handed!");
+                    newEnemy.transform.Find("EnemySwordPlaceholdLeftHand").gameObject.SetActive(false);
+                    newEnemy.transform.Find("EnemySwordPlacehold").gameObject.SetActive(true);
+                }
                 enemyList.Add(newEnemy);
             }
         } else
@@ -80,6 +91,24 @@ public class SpawnEnemy : MonoBehaviour {
     public void instantiateEnemy(GameObject prefab, Vector2 position)
     {
         GameObject newEnemy = (GameObject)Instantiate(prefab, position, Quaternion.identity);
+
+        newEnemy.GetComponent<Separation>().maxSepDist = Random.Range(0.1f, 2.1f);
+
+        int leftHanded = Random.Range(0, 2);
+        if (leftHanded == 0)
+        {
+            Debug.Log("Left-handed!");
+            newEnemy.transform.Find("EnemySwordPlaceholdLeftHand").gameObject.SetActive(true);
+            newEnemy.transform.Find("EnemySwordPlacehold").gameObject.SetActive(false);
+        }
+        else
+        {
+            Debug.Log("Right-handed!");
+            newEnemy.transform.Find("EnemySwordPlaceholdLeftHand").gameObject.SetActive(false);
+            newEnemy.transform.Find("EnemySwordPlacehold").gameObject.SetActive(true);
+        }
+
+        enemyList.Add(newEnemy);
     }
 
     /*
@@ -93,25 +122,18 @@ public class SpawnEnemy : MonoBehaviour {
         Transform location = player.transform;
 
         float ang = Random.value * 360;
-        float radius = 10f;
+        float radius = Random.Range(10f, 15f);
         Vector2 pos = Vector2.zero;
         pos.x = location.transform.position.x + radius * Mathf.Sin(ang * Mathf.Deg2Rad);
-        //while (pos.x < minX || pos.x > maxX)
-        //{
-            
-        //    pos.x = location.transform.position.x + radius * Mathf.Sin(ang * Mathf.Deg2Rad);
-        //    Debug.Log("Recalculating the pos.x.");
-        //}
-
         pos.y = location.transform.position.y + radius * Mathf.Cos(ang * Mathf.Deg2Rad);
-        //while (pos.y < minY || pos.y > maxY)
-        //{
-        //    Debug.Log("Recalculating the pos.y.");
-        //    pos.y = location.transform.position.y + radius * Mathf.Cos(ang * Mathf.Deg2Rad);
-        //}
-        Debug.Log(pos + ", " + (pos.x < minX || pos.x > maxX));
+        while (pos.x < minX || pos.x > maxX 
+            || pos.y < minY || pos.y > maxY)
+        {
+            ang = Random.value * 360;
+            pos.x = location.transform.position.x + radius * Mathf.Sin(ang * Mathf.Deg2Rad);
+            pos.y = location.transform.position.y + radius * Mathf.Cos(ang * Mathf.Deg2Rad);
 
-
+        }
 
         return pos;
     }

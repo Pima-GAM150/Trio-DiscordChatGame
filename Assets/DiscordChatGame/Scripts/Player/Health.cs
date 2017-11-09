@@ -38,7 +38,9 @@ public class Health : MonoBehaviour {
     {
         if(hearts.Count > 0)
         {
+
             Destroy(hearts[hearts.Count - 1]);
+            hearts.Remove(hearts[hearts.Count - 1]);
         }
     }
 }

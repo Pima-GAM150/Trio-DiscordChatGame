@@ -41,8 +41,8 @@ public class StateController : MonoBehaviour {
         }
         if(hitPlayer)
         {
-            Debug.Log("Setting hitPlayer back to false.");
-            player.GetComponent<PlayerController>().hp -= this.gameObject.GetComponent<Enemy>().dmg;
+            //Debug.Log("Setting hitPlayer back to false.");
+            //player.GetComponent<PlayerController>().hp -= this.gameObject.GetComponent<Enemy>().dmg;
             hitPlayer = false;
         }
 	}
