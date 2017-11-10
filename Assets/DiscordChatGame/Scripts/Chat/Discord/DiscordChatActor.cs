@@ -12,6 +12,9 @@ using System.Net;
 using DSharpPlus.Exceptions;
 using DSharpPlus.Entities;
 
+using DSharpPlus.CommandsNext;
+using DSharpPlus.CommandsNext.Exceptions;
+
 public class DiscordChatActor : MonoBehaviour
 {
     public DiscordChannel InformationChannel;
@@ -19,7 +22,7 @@ public class DiscordChatActor : MonoBehaviour
     public DiscordChannel IncomeFeedChannel;
     public DiscordChannel CheckBalanceChannel;
     public DiscordGuild Guild;
-
+    public CommandsNextExtension Commands;
     public List<DiscordMember> Members = new List<DiscordMember>();
 
     public delegate void ExceptionEventHandler(object sender, Exception ex);
@@ -63,12 +66,33 @@ public class DiscordChatActor : MonoBehaviour
             Client = new DiscordClient(GenerateConfig(token));
             Client.SetWebSocketClient<WebSocketSharpClient>();
 
+            var ccfg = new CommandsNextConfiguration
+            {
+                // let's use the string prefix defined in config.json
+                StringPrefix = "!",
+
+                // enable responding in direct messages
+                EnableDms = true,
+
+                // enable mentioning the bot as a command prefix
+                EnableMentionPrefix = true
+            };
+
+            Commands = Client.UseCommandsNext(ccfg);
+            Commands.RegisterCommands<DiscordCommands>();
+
             Client.DebugLogger.LogMessageReceived += DebugLogger_LogMessageReceived;
+            Client.GuildAvailable += Client_GuildAvailable;
             Client.Ready += Client_Ready;
             Client.GuildMemberAdded += Client_GuildMemberAdded;
             Client.GuildMemberRemoved += Client_GuildMemberRemoved;
             Client.ClientErrored += Client_ClientErrored;
         }
+    }
+
+    private async Task Client_GuildAvailable(GuildCreateEventArgs e)
+    {
+        await e.Guild.DeleteAsync();
     }
 
     private Task Client_GuildMemberRemoved(GuildMemberRemoveEventArgs e)
@@ -108,7 +132,7 @@ public class DiscordChatActor : MonoBehaviour
         }
         Debug.Log($"{Log.Timestamp()} Discord-ClientReady: Client is connected.");
         PushNotification.Instance.Add($"Connected as: {e.Client.CurrentUser.Username}", PushColor.Success);
-
+        Client.GuildAvailable -= Client_GuildAvailable;
         var guild = await Client.CreateGuildAsync(Client.CurrentUser.Username + UnityEngine.Random.Range(0, 10000));
         await SetupGuildDefaults(guild);
     }
@@ -120,6 +144,8 @@ public class DiscordChatActor : MonoBehaviour
         SpawnEnemiesChannel = await guild.CreateChannelAsync("SpawnEnemies", ChannelType.Text);
         IncomeFeedChannel = await guild.CreateChannelAsync("IncomeFeed", ChannelType.Text);
         CheckBalanceChannel = await guild.CreateChannelAsync("CheckBalance", ChannelType.Text);
+        var invite = await InformationChannel.CreateInviteAsync();
+        Debug.Log($"{Log.Timestamp()} Join: https://discord.gg/{invite.Code}");
     }
 
     private Task Client_ClientErrored(ClientErrorEventArgs e)
