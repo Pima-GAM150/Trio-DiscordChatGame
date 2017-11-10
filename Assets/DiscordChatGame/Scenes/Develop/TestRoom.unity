@@ -330,7 +330,7 @@ RectTransform:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 117008216}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 571.5, y: 236, z: 0}
+  m_LocalPosition: {x: 458, y: 208, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 55530463}
@@ -351,7 +351,7 @@ Prefab:
     m_Modifications:
     - target: {fileID: 4914602911952288, guid: 15d189efe622f284282888627166da36, type: 2}
       propertyPath: m_LocalPosition.x
-      value: -25.41
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4914602911952288, guid: 15d189efe622f284282888627166da36, type: 2}
       propertyPath: m_LocalPosition.y
@@ -399,7 +399,7 @@ Prefab:
     - target: {fileID: 224947280515263002, guid: 15d189efe622f284282888627166da36,
         type: 2}
       propertyPath: m_LocalPosition.y
-      value: 214.25
+      value: 27.355
       objectReference: {fileID: 0}
     - target: {fileID: 223407724578433450, guid: 15d189efe622f284282888627166da36,
         type: 2}
@@ -409,12 +409,12 @@ Prefab:
     - target: {fileID: 224570616237893308, guid: 15d189efe622f284282888627166da36,
         type: 2}
       propertyPath: m_LocalPosition.x
-      value: 596.91
+      value: 458
       objectReference: {fileID: 0}
     - target: {fileID: 224570616237893308, guid: 15d189efe622f284282888627166da36,
         type: 2}
       propertyPath: m_LocalPosition.y
-      value: 236
+      value: 208
       objectReference: {fileID: 0}
     - target: {fileID: 114745001347335324, guid: 15d189efe622f284282888627166da36,
         type: 2}
@@ -434,7 +434,7 @@ Prefab:
     - target: {fileID: 224783506477212690, guid: 15d189efe622f284282888627166da36,
         type: 2}
       propertyPath: m_LocalPosition.y
-      value: 177.5
+      value: 35
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 15d189efe622f284282888627166da36, type: 2}
@@ -640,11 +640,6 @@ BoxCollider2D:
   serializedVersion: 2
   m_Size: {x: 0.99999994, y: 0.99999994}
   m_EdgeRadius: 0
---- !u!1 &700455592 stripped
-GameObject:
-  m_PrefabParentObject: {fileID: 1634232108535696, guid: 15d189efe622f284282888627166da36,
-    type: 2}
-  m_PrefabInternal: {fileID: 117429992}
 --- !u!1 &723172255
 GameObject:
   m_ObjectHideFlags: 0
@@ -685,10 +680,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d8faa72c6d5a37c47ab52e1d797c1cf0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  player: {fileID: 700455592}
+  player: {fileID: 1634232108535696, guid: 15d189efe622f284282888627166da36, type: 2}
   gameArea: {fileID: 1080089920}
   prefabs:
   - {fileID: 1766840095336306, guid: 7e5bfb0ffb7191e47aa3b691f5641568, type: 2}
+  enemyDictionary: []
+  enemyIncome: []
   enemyList: []
 --- !u!1 &1080089920
 GameObject:
