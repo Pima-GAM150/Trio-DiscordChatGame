@@ -54,8 +54,8 @@ public class SpawnEnemy : MonoBehaviour {
         GameObject prefab = getValue(enemyName);
         float spawnCost = spawnNumber * prefab.GetComponent<Enemy>().cost;
 
-        if(spawnCost < getMemberIncome(userName))
-        {
+        //if(spawnCost < getMemberIncome(userName))
+        //{
             for (int i = 0; i < spawnNumber; i++)
             {
                 Vector2 position = getRandomPosition();
@@ -78,10 +78,10 @@ public class SpawnEnemy : MonoBehaviour {
                 }
                 enemyList.Add(newEnemy);
             }
-        } else
-        {
+        //} else
+        //{
             //not enough money
-        }
+        //}
     }
     
     /*
