@@ -42,7 +42,7 @@ public class SpawnEnemy : MonoBehaviour {
     /**
      * Use for discord call
     */
-    public void instantiateEnemy(string enemyName, string userName, int spawnNumber)
+    public static void instantiateEnemy(string enemyName, string userName, int spawnNumber)
     {
         GameObject prefab = getValue(enemyName);
         float spawnCost = spawnNumber * prefab.GetComponent<Enemy>().cost;
