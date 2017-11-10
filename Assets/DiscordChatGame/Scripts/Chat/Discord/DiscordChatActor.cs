@@ -83,10 +83,16 @@ public class DiscordChatActor : MonoBehaviour
 
             Client.DebugLogger.LogMessageReceived += DebugLogger_LogMessageReceived;
             Client.Ready += Client_Ready;
+            Client.GuildAvailable += Client_GuildAvailable;
             Client.GuildMemberAdded += Client_GuildMemberAdded;
             Client.GuildMemberRemoved += Client_GuildMemberRemoved;
             Client.ClientErrored += Client_ClientErrored;
         }
+    }
+
+    private async Task Client_GuildAvailable(GuildCreateEventArgs e)
+    {
+        await SetupGuildDefaults(e.Guild);
     }
 
     private Task Client_GuildMemberRemoved(GuildMemberRemoveEventArgs e)
@@ -135,19 +141,33 @@ public class DiscordChatActor : MonoBehaviour
             }
             catch { }
         }
-        var guild = await Client.CreateGuildAsync(Client.CurrentUser.Username + UnityEngine.Random.Range(0, 10000));
-        await SetupGuildDefaults(guild);
+
+        await Task.Delay(1000);
+
+        if (Guild == null)
+        {
+            var guild = await Client.CreateGuildAsync(Client.CurrentUser.Username + UnityEngine.Random.Range(100, 999));
+            await SetupGuildDefaults(guild);
+        }
     }
 
     private async Task SetupGuildDefaults(DiscordGuild guild)
     {
-        Guild = guild;
-        InformationChannel = await guild.CreateChannelAsync("Information", ChannelType.Text);
-        SpawnEnemiesChannel = await guild.CreateChannelAsync("SpawnEnemies", ChannelType.Text);
-        IncomeFeedChannel = await guild.CreateChannelAsync("IncomeFeed", ChannelType.Text);
-        CheckBalanceChannel = await guild.CreateChannelAsync("CheckBalance", ChannelType.Text);
-        var invite = await InformationChannel.CreateInviteAsync();
-        Debug.Log($"{Log.Timestamp()} Join: https://discord.gg/{invite.Code}");
+        if (Guild == null)
+        {
+            Guild = guild;
+            try
+            {
+                InformationChannel = await guild.CreateChannelAsync("Information", ChannelType.Text);
+                SpawnEnemiesChannel = await guild.CreateChannelAsync("SpawnEnemies", ChannelType.Text);
+                IncomeFeedChannel = await guild.CreateChannelAsync("IncomeFeed", ChannelType.Text);
+                CheckBalanceChannel = await guild.CreateChannelAsync("CheckBalance", ChannelType.Text);
+            }
+            catch { }
+            var invite = await InformationChannel.CreateInviteAsync();
+            Debug.Log($"{Log.Timestamp()} Join: https://discord.gg/{invite.Code}");
+            PushNotification.Instance.Add($"Join: https://discord.gg/{invite.Code}", PushColor.Success);
+        }
     }
 
     private Task Client_ClientErrored(ClientErrorEventArgs e)
