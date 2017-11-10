@@ -256,7 +256,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1634232108535696}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -25.41, y: 0, z: 0}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 4098588257667476}
@@ -509,9 +509,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a539f6b3e94b2f44c90092d27612e7c4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  hp: 6
+  hp: 4
   dmg: 1
-  currentIncome: 53
+  currentIncome: 66
 --- !u!114 &114602183729724572
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -526,7 +526,7 @@ MonoBehaviour:
   bulletPrefab: {fileID: 1062830586003700, guid: 1daa3fe493660b84ba3dac7c286b64be,
     type: 2}
   spawnPosition: {fileID: 1882473682109054}
-  shootDelay: 0.25
+  shootDelay: 0.4
 --- !u!114 &114631353935088730
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -588,7 +588,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   rb: {fileID: 0}
-  speed: 5
+  speed: 3
 --- !u!114 &114709325896472018
 MonoBehaviour:
   m_ObjectHideFlags: 1
