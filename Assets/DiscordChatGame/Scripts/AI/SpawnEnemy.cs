@@ -12,7 +12,7 @@ public class SpawnEnemy : MonoBehaviour {
     public List<GameObject> prefabs;
     public static List<EnemyDictionary> enemyDictionary = new List<EnemyDictionary>(); //a list of all the enemy prefabs that can be spawned
     public static List<EnemyIncome> enemyIncome = new List<EnemyIncome>(); //list of discord member's income
-    public List<GameObject> enemyList = new List<GameObject>(); //list of current enemies alive in the game
+    public static List<GameObject> enemyList = new List<GameObject>(); //list of current enemies alive in the game
 
     private float minX;
     private float minY;
@@ -117,7 +117,7 @@ public class SpawnEnemy : MonoBehaviour {
      * This is going to cause issues with enemies spawning outside of the play area
      * Possible fixes are if the enemy is spawned outside the play area, do a check and then have them spawn at a specific point
      */ 
-    public Vector2 getRandomPosition()
+    public static Vector2 getRandomPosition()
     {
         Transform location = player.transform;
 
@@ -174,7 +174,7 @@ public class SpawnEnemy : MonoBehaviour {
 
     }
 
-    public GameObject getValue(string key)
+    public static GameObject getValue(string key)
     {
         //Debug.Log(enemyDictionary.Count);
         foreach(EnemyDictionary enemy in enemyDictionary)
