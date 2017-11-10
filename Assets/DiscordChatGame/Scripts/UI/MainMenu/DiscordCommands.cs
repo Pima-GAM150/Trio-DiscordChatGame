@@ -15,7 +15,7 @@ public class DiscordCommands
     {
         await ctx.TriggerTypingAsync();
 
-        if (!SpawnEnemy.enemyDictionary.Any())
+        if (!SpawnEnemy.instance.enemyDictionary.Any())
         {
             await ctx.RespondAsync($"enemyDictionary empty! **The game is broken**:clap::clap:");
             return;
