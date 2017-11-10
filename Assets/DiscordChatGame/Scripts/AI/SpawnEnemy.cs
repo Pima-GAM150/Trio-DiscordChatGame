@@ -33,10 +33,10 @@ public class SpawnEnemy : MonoBehaviour {
         minY = gameArea.GetComponent<SpriteRenderer>().bounds.min.y;
         maxX = gameArea.GetComponent<SpriteRenderer>().bounds.max.x;
         maxY = gameArea.GetComponent<SpriteRenderer>().bounds.max.y;
-        for(int i = 0; i < 5; i++)
-        {
-            instantiateEnemy(prefabs[0], getRandomPosition());
-        }
+        //for(int i = 0; i < 5; i++)
+        //{
+        //    instantiateEnemy(prefabs[0], getRandomPosition());
+        //}
     }
 	
 	// Update is called once per frame
@@ -54,8 +54,8 @@ public class SpawnEnemy : MonoBehaviour {
         GameObject prefab = getValue(enemyName);
         float spawnCost = spawnNumber * prefab.GetComponent<Enemy>().cost;
 
-        //if(spawnCost < getMemberIncome(userName))
-        //{
+        if(spawnCost < getMemberIncome(userName))
+        {
             for (int i = 0; i < spawnNumber; i++)
             {
                 Vector2 position = getRandomPosition();
@@ -78,10 +78,10 @@ public class SpawnEnemy : MonoBehaviour {
                 }
                 enemyList.Add(newEnemy);
             }
-        //} else
-        //{
+        } else
+        {
             //not enough money
-        //}
+        }
     }
     
     /*
