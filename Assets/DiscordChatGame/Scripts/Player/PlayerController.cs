@@ -18,6 +18,7 @@ public class PlayerController : MonoBehaviour {
 		if(hp <= 0)
         {
             transform.position = Vector2.zero;
+            hp = 2f;
             //Destroy(this.gameObject);
         }
 	}
