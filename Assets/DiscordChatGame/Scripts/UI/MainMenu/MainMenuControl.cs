@@ -9,12 +9,18 @@ using UnityEngine;
 using UnityEngine.UI;
 using DSharpPlus;
 using TMPro;
+using UnityEngine.SceneManagement;
 
 public class MainMenuControl : MonoBehaviour
 {
     public UISwitchGroup Switch;
     public TMP_InputField TokenField;
     private Button _tokenButton;
+
+    public void StartButtonClicked()
+    {
+        SceneManager.LoadScene("TestRoom");
+    }
 
     public void Start()
     {
