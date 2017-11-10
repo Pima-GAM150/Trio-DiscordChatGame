@@ -17,7 +17,8 @@ public class PlayerController : MonoBehaviour {
 	void Update () {
 		if(hp <= 0)
         {
-            Destroy(this.gameObject);
+            transform.position = Vector2.zero;
+            //Destroy(this.gameObject);
         }
 	}
 

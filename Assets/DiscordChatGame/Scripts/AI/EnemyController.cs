@@ -74,10 +74,10 @@ public class EnemyController : Enemy {
     public void onDeath()
     {
         //Wrapping this in an empty check otherwise it never makes it to the Destroy function
-        if(SpawnEnemy.enemyIncome.Count > 0)
+        if(SpawnEnemy.instance.enemyIncome.Count > 0)
         {
             EnemyIncome userIncome;
-            userIncome = SpawnEnemy.enemyIncome.First<EnemyIncome>(s => s.key.Equals(name));
+            userIncome = SpawnEnemy.instance.enemyIncome.First<EnemyIncome>(s => s.key.Equals(name));
             userIncome.value += timeAlive * incomeMultiplier;
             Debug.Log(userIncome.value);
             

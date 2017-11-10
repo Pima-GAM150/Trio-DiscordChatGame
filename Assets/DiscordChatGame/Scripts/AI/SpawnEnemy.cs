@@ -7,17 +7,24 @@ using System.Linq;
 
 public class SpawnEnemy : MonoBehaviour {
 
+    public static SpawnEnemy instance;
+
     public GameObject player;
     public GameObject gameArea;
     public List<GameObject> prefabs;
-    public static List<EnemyDictionary> enemyDictionary = new List<EnemyDictionary>(); //a list of all the enemy prefabs that can be spawned
-    public static List<EnemyIncome> enemyIncome = new List<EnemyIncome>(); //list of discord member's income
-    public static List<GameObject> enemyList = new List<GameObject>(); //list of current enemies alive in the game
+    public List<EnemyDictionary> enemyDictionary = new List<EnemyDictionary>(); //a list of all the enemy prefabs that can be spawned
+    public List<EnemyIncome> enemyIncome = new List<EnemyIncome>(); //list of discord member's income
+    public List<GameObject> enemyList = new List<GameObject>(); //list of current enemies alive in the game
 
     private float minX;
     private float minY;
     private float maxX;
     private float maxY;
+
+    void Awake()
+    {
+        instance = this;
+    }
 
     // Use this for initialization
     void Start () {
@@ -42,7 +49,7 @@ public class SpawnEnemy : MonoBehaviour {
     /**
      * Use for discord call
     */
-    public static void instantiateEnemy(string enemyName, string userName, int spawnNumber)
+    public void instantiateEnemy(string enemyName, string userName, int spawnNumber)
     {
         GameObject prefab = getValue(enemyName);
         float spawnCost = spawnNumber * prefab.GetComponent<Enemy>().cost;
@@ -80,9 +87,9 @@ public class SpawnEnemy : MonoBehaviour {
     /*
      * returns the members current income
      */ 
-    public static float getMemberIncome(string userName)
+    public float getMemberIncome(string userName)
     {
-        return SpawnEnemy.enemyIncome.First<EnemyIncome>(s => s.key.Equals(userName)).value;
+        return enemyIncome.First<EnemyIncome>(s => s.key.Equals(userName)).value;
     }
 
     /**
@@ -117,7 +124,7 @@ public class SpawnEnemy : MonoBehaviour {
      * This is going to cause issues with enemies spawning outside of the play area
      * Possible fixes are if the enemy is spawned outside the play area, do a check and then have them spawn at a specific point
      */ 
-    public static Vector2 getRandomPosition()
+    public Vector2 getRandomPosition()
     {
         Transform location = player.transform;
 
@@ -174,7 +181,7 @@ public class SpawnEnemy : MonoBehaviour {
 
     }
 
-    public static GameObject getValue(string key)
+    public GameObject getValue(string key)
     {
         //Debug.Log(enemyDictionary.Count);
         foreach(EnemyDictionary enemy in enemyDictionary)
