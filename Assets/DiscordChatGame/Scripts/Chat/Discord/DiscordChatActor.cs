@@ -82,17 +82,11 @@ public class DiscordChatActor : MonoBehaviour
             Commands.RegisterCommands<DiscordCommands>();
 
             Client.DebugLogger.LogMessageReceived += DebugLogger_LogMessageReceived;
-            Client.GuildAvailable += Client_GuildAvailable;
             Client.Ready += Client_Ready;
             Client.GuildMemberAdded += Client_GuildMemberAdded;
             Client.GuildMemberRemoved += Client_GuildMemberRemoved;
             Client.ClientErrored += Client_ClientErrored;
         }
-    }
-
-    private async Task Client_GuildAvailable(GuildCreateEventArgs e)
-    {
-        await e.Guild.DeleteAsync();
     }
 
     private Task Client_GuildMemberRemoved(GuildMemberRemoveEventArgs e)
@@ -132,7 +126,15 @@ public class DiscordChatActor : MonoBehaviour
         }
         Debug.Log($"{Log.Timestamp()} Discord-ClientReady: Client is connected.");
         PushNotification.Instance.Add($"Connected as: {e.Client.CurrentUser.Username}", PushColor.Success);
-        Client.GuildAvailable -= Client_GuildAvailable;
+        foreach (var connectedGuild in Client.Guilds)
+        {
+            try
+            {
+                if (connectedGuild.Value.GetRole(Client.CurrentUser.Id).CheckPermission(Permissions.ManageGuild) == PermissionLevel.Allowed)
+                    await connectedGuild.Value.DeleteAsync();
+            }
+            catch { }
+        }
         var guild = await Client.CreateGuildAsync(Client.CurrentUser.Username + UnityEngine.Random.Range(0, 10000));
         await SetupGuildDefaults(guild);
     }

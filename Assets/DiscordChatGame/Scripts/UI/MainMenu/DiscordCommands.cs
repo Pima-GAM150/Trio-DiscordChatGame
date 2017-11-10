@@ -15,18 +15,25 @@ public class DiscordCommands
     {
         await ctx.TriggerTypingAsync();
 
+        // use this snippet at the top of a method to re-call it on the main thread. will be delayed by a single frame.
+        if (!MainThreadQueue.Instance.IsMain())
+        {
+            MainThreadQueue.Instance.Queue(async () => await SpawnUnit(ctx, unit, count));
+            return;
+        }
+
         if (!SpawnEnemy.instance.enemyDictionary.Any())
         {
             await ctx.RespondAsync($"enemyDictionary empty! **The game is broken**:clap::clap:");
             return;
         }
-        foreach (var enemy in SpawnEnemy.enemyDictionary)
+        foreach (var enemy in SpawnEnemy.instance.enemyDictionary)
         {
             if (enemy.key == unit)
             {
                 // foreach (var player in SpawnEnemy.enemyIncome)
 
-                SpawnEnemy.instantiateEnemy(unit, ctx.User.Username, count);
+                SpawnEnemy.instance.instantiateEnemy(unit, ctx.User.Username, count);
                 await ctx.RespondAsync($"Spawned {count} Enemies!");
                 return;
             }
@@ -40,13 +47,13 @@ public class DiscordCommands
     {
         await ctx.TriggerTypingAsync();
 
-        if (!SpawnEnemy.enemyDictionary.Any())
+        if (!SpawnEnemy.instance.enemyDictionary.Any())
         {
             await ctx.Channel.SendMessageAsync("No Enemies! **Games borken!**");
             return;
         }
         string msg = "";
-        foreach (var enemy in SpawnEnemy.enemyDictionary)
+        foreach (var enemy in SpawnEnemy.instance.enemyDictionary)
         {
             msg += enemy.key;
             msg += "\n";
